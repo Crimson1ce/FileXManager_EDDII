@@ -660,7 +660,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }
 
+
     private LinkedList registros = new LinkedList();
+
     private ArrayList<String> campos = new ArrayList<String>();
     private File archivoCargado;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
