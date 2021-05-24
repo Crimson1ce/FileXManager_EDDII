@@ -392,7 +392,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     + "correctamente", "EXITO", JOptionPane.INFORMATION_MESSAGE);
             saved = true;
         } catch (IOException ex) {
-            Logger.getLogger(proyecto_estructuras_ii.PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(classes.PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_saveFileActionPerformed
 
@@ -475,6 +475,35 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             if (temp.equals(campoModificar)) {
                 campos.set(i, modificacion_);
                 flag = true;
+                JOptionPane.showMessageDialog(this, "Campo modificado con exito",
+                        "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            }
+        }
+        if (!flag) {
+            JOptionPane.showMessageDialog(this, "El campo ingresado debe ser"
+                    + " EXACTAMENTE el mismo nombre que el campo a modificar",
+                    "VERIFICAR", JOptionPane.ERROR_MESSAGE);
+        }
+        String[] campos_ = new String[campos.size()];
+        for (int i = 0; i < campos.size(); i++) {
+            campos_[i] = campos.get(i);
+        }
+        DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
+        model.setColumnIdentifiers(campos_);
+    }//GEN-LAST:event_modCamposActionPerformed
+
+    private void delCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delCamposActionPerformed
+        String campoEliminar = JOptionPane.showInputDialog(this, "Ingrese el "
+                + "nombre del campo a eliminar");
+        boolean flag = false;
+        for (String campo : campos) {
+            String aux = campo.substring(0, campo.length());
+            if (aux.equals(campoEliminar)) {
+                campos.remove(campo);
+                JOptionPane.showMessageDialog(this, "Campo eliminado con exito",
+                        "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
+                flag = true;
                 break;
             }
         }
@@ -489,33 +518,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
         DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
         model.setColumnIdentifiers(campos_);
-    }//GEN-LAST:event_modCamposActionPerformed
-
-    private void delCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delCamposActionPerformed
-        String campoEliminar = JOptionPane.showInputDialog(this, "Ingrese el "
-                + "nombre del campo a eliminar");
-        for (String campo : campos) {
-            String aux = campo.substring(0, campo.length());
-            if (aux.equals(campoEliminar)) {
-                campos.remove(campo);
-                JOptionPane.showMessageDialog(this, "Campo eliminado con exito",
-                        "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            } else {
-                JOptionPane.showMessageDialog(this, "El campo ingresado debe ser"
-                        + " EXACTAMENTE el mismo nombre que el campo a eliminar",
-                        "VERIFICAR", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        String[] campos_ = new String[campos.size()];
-        for (int i = 0; i < campos.size(); i++) {
-            campos_[i] = campos.get(i);
-        }
-        DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
-        model.setColumnIdentifiers(campos_);
     }//GEN-LAST:event_delCamposActionPerformed
 
-    
     /**
      * @param args the command line arguments
      */
@@ -588,8 +592,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextArea taCampos;
     // End of variables declaration//GEN-END:variables
 
-
-    public String InsertMetadata() { 
+    public String InsertMetadata() {
         /*
         RRN,Delimeter,#Registros,Campos,Version,Modified by,Last time modified,Date created
          */
@@ -626,7 +629,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jLabel_current.setText("Current file: " + archivoCargado.getName());
         jTable_Display.setModel(new DefaultTableModel(0, 0));
 
-        try (FileReader fr = new FileReader(archivoCargado); BufferedReader br = new BufferedReader(fr)) {
+        try ( FileReader fr = new FileReader(archivoCargado);  BufferedReader br = new BufferedReader(fr)) {
 
             try {
                 sc = new Scanner(archivoCargado);
@@ -656,8 +659,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }
-    
-    private proyecto_estructuras_ii.LinkedList registros = new proyecto_estructuras_ii.LinkedList();
+
+    private LinkedList registros = new LinkedList();
     private ArrayList<String> campos = new ArrayList<String>();
     private File archivoCargado;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
