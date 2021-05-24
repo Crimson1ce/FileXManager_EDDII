@@ -392,7 +392,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     + "correctamente", "EXITO", JOptionPane.INFORMATION_MESSAGE);
             saved = true;
         } catch (IOException ex) {
-            Logger.getLogger(proyecto_estructuras_ii.PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(classes.PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_saveFileActionPerformed
 
@@ -657,7 +657,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }
     
-    private proyecto_estructuras_ii.LinkedList registros = new proyecto_estructuras_ii.LinkedList();
+    private classes.LinkedList registros = new classes.LinkedList();
     private ArrayList<String> campos = new ArrayList<String>();
     private File archivoCargado;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
