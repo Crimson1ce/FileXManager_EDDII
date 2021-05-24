@@ -445,6 +445,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El campo ya existe.", "No se"
                     + " puede añadir el campo", JOptionPane.ERROR_MESSAGE);
         }
+        saved = false;
     }//GEN-LAST:event_newCampoActionPerformed
 
     private void listCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listCamposActionPerformed
@@ -464,33 +465,44 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_listCamposActionPerformed
 
     private void modCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modCamposActionPerformed
-        String campoModificar = JOptionPane.showInputDialog(this, "Ingrese el "
-                + "nombre del campo a modificar");
-        String modificacion = JOptionPane.showInputDialog(this, "Ingrese el "
-                + " nuevo nombre del campo");
-        String modificacion_ = modificacion.toUpperCase();
-        boolean flag = false;
-        for (int i = 0; i < campos.size(); i++) {
-            String temp = campos.get(i);
-            if (temp.equals(campoModificar)) {
-                campos.set(i, modificacion_);
-                flag = true;
-                JOptionPane.showMessageDialog(this, "Campo modificado con exito",
-                        "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
-                break;
+        try {
+            String campoModificar = JOptionPane.showInputDialog(this, "Ingrese el "
+                    + "nombre del campo a modificar");
+            if (campoModificar == null) {
+                return;
             }
+            String modificacion = JOptionPane.showInputDialog(this, "Ingrese el "
+                    + " nuevo nombre del campo");
+            if (modificacion == null) {
+                return;
+            }
+            String modificacion_ = modificacion.toUpperCase();
+            boolean flag = false;
+            for (int i = 0; i < campos.size(); i++) {
+                String temp = campos.get(i);
+                if (temp.equals(campoModificar)) {
+                    campos.set(i, modificacion_);
+                    flag = true;
+                    JOptionPane.showMessageDialog(this, "Campo modificado con exito",
+                            "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                }
+            }
+            if (!flag) {
+                JOptionPane.showMessageDialog(this, "El campo ingresado debe ser"
+                        + " EXACTAMENTE el mismo nombre que el campo a modificar",
+                        "VERIFICAR", JOptionPane.ERROR_MESSAGE);
+            }
+            String[] campos_ = new String[campos.size()];
+            for (int i = 0; i < campos.size(); i++) {
+                campos_[i] = campos.get(i);
+            }
+            DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
+            model.setColumnIdentifiers(campos_);
+            saved = false;
+        } catch (Exception E) {
         }
-        if (!flag) {
-            JOptionPane.showMessageDialog(this, "El campo ingresado debe ser"
-                    + " EXACTAMENTE el mismo nombre que el campo a modificar",
-                    "VERIFICAR", JOptionPane.ERROR_MESSAGE);
-        }
-        String[] campos_ = new String[campos.size()];
-        for (int i = 0; i < campos.size(); i++) {
-            campos_[i] = campos.get(i);
-        }
-        DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
-        model.setColumnIdentifiers(campos_);
+
     }//GEN-LAST:event_modCamposActionPerformed
 
     private void delCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delCamposActionPerformed
@@ -518,6 +530,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
         DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
         model.setColumnIdentifiers(campos_);
+        saved = false;
     }//GEN-LAST:event_delCamposActionPerformed
 
     /**
@@ -660,12 +673,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }
 
-
     private LinkedList registros = new LinkedList();
 
     private ArrayList<String> campos = new ArrayList<String>();
     private File archivoCargado;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
-
-//debe inicializarse en false porque por default el archivo no se ha guardado, hayasé modificado o no
 }
