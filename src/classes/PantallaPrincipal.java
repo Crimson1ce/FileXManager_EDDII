@@ -467,7 +467,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             campos.add(campo);
             if (!tieneLlavePrincipal) {
-                int opc = JOptionPane.showConfirmDialog(this, "¿Desea hacer este campo su llave principal?");
+                int opc = JOptionPane.showConfirmDialog(listCamposPantalla, "¿Desea hacer este campo su llave principal?");
                 if (opc == JOptionPane.YES_OPTION) {
                     jLabelPrincipal.setText("Llave principal: " + campo);
                     //archivoEnUso.setLlavePrincipal(campos.indexOf(campo));
@@ -669,6 +669,23 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     }
 
+    public String InsertMetadataWithLlavePrincipal(String Llave) {
+        /*
+        RRN,Delimeter,#Registros,Campos,Version,Modified by,Last time modified,Date created
+         */
+        Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yy-mm-dd hh:mm:ss");
+        String strDateCreated = dateFormat.format(date) + "?";
+        String campos = "" + "?";
+        String delimeter = "|" + "?";
+        String RRN = "" + "?";
+        String numRegistros = "0" + "?";
+        String lastestMod = System.getProperty("user.name");
+        String Final = RRN + numRegistros + campos + Llave + "?" + delimeter + strDateCreated + lastestMod;
+        return Final;
+
+    }
+
     private boolean verifyOpen() {
         if (archivoCargado == null) {
             JOptionPane.showMessageDialog(this, "Debe abrir un archivo para "
@@ -709,7 +726,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         list_model.addElement(dataColumn[i]);
                         campos.add(dataColumn[i]);
                     }
-
+                    jLabelPrincipal.setText("Llave Principal: " + data[3]);
                     //Modify the newly created table model
                     DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
                     model.setColumnIdentifiers(dataColumn);
