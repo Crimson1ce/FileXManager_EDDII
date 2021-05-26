@@ -293,24 +293,26 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private void newFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newFileActionPerformed
         if (archivoCargado != null) {
-            closeFileActionPerformed(evt); //Al correr el programa y abrir el primer archivo hace una corrida de esta linea, la cual no deberia pasar
+            closeFileActionPerformed(evt); // Al correr el programa y abrir el primer archivo hace una corrida de esta linea, la cual no deberia pasar
             // porque por default no hay archivo cargado
         }
 
         JFileChooser jfc = new JFileChooser("./Files");//instanciar
 
-        //y agregar una extension que filtre
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Texto", "txt");
+        // y agregar una extension que filtre
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivo de Registro X", "xfile");
         jfc.setFileFilter(filtro);
-        int seleccion = jfc.showSaveDialog(this);//muestre la ventana 
+        int seleccion = jfc.showSaveDialog(this); // muestre la ventana
 
         PrintWriter pw = null;
 
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             try {
                 File fichero = null; //instancia es null porque hay que ponerlo en una extension
-                if (jfc.getFileFilter().getDescription().equals("Archivos de Texto")) { //si el filtro es archivo de texto
-                    fichero = new File(jfc.getSelectedFile().getPath() + ".txt");//agarre el archivo y concatene la extension
+                if (jfc.getFileFilter().getDescription().equals("Archivo de Registro X")) { //si el filtro es archivo de texto
+                    
+                    String path = jfc.getSelectedFile().getPath();
+                    fichero = new File(path + (path.endsWith(".xfile") ? "" :".xfile"));//agarre el archivo y concatene la extension
 
                 } else {
                     int replace = JOptionPane.showConfirmDialog(this, "¿Desea "
@@ -351,7 +353,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             JFileChooser jfc = new JFileChooser("./Files"); //donde deseamos que aparezca
 
             //crear los filtros
-            FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Texto", "txt");
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Registro X", "xfile");
 //            FileNameExtensionFilter filtro2 = new FileNameExtensionFilter("Imagenes", "jpg", "png", "bmp");
 
             //setear los filtros
