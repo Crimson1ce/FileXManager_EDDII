@@ -63,6 +63,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jPanel_BackGround = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable_Display = new javax.swing.JTable();
+        jLabelPrincipal = new javax.swing.JLabel();
         jLabel_current = new javax.swing.JLabel();
         jLabel_Title = new javax.swing.JLabel();
         jLabel_BG = new javax.swing.JLabel();
@@ -164,6 +165,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jTable_Display);
 
         jPanel_BackGround.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 950, 330));
+
+        jLabelPrincipal.setText("Llave Principal: ");
+        jPanel_BackGround.add(jLabelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 200, 30));
 
         jLabel_current.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel_current.setForeground(new java.awt.Color(255, 150, 119));
@@ -327,7 +331,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jLabel_current.setText("Current file: " + archivoCargado.getName());
                 jTable_Display.setModel(new DefaultTableModel(0, 0));
                 saved = true;
-                
+
                 campos = new ArrayList<>();
                 jList_campos.setModel(new DefaultListModel());
 
@@ -371,35 +375,34 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             return;
         }
 
-        try (Scanner sc = new Scanner(archivoCargado)) {
-            
+        try ( Scanner sc = new Scanner(archivoCargado)) {
+
             // Read the first line
             String line = sc.nextLine();
-            
+
             // Divide the metadata fields
             String[] metadata = line.split("\\?");
-            
-            
+
             String aux = "";
             for (String temp : campos) {
                 aux += temp + "|";
             }
-            
+
             metadata[2] = aux;
             String aux2 = Arrays.toString(metadata);
-            
+
             // Cut off the surrounding brackets
-            aux2 = aux2.substring(1, aux2.length()-1);
-            
+            aux2 = aux2.substring(1, aux2.length() - 1);
+
             //Replace the commas with ?
             aux2 = aux2.replaceAll(", ", "?");
-            
+
             // Replace multiple spaces with single spaces
             aux2 = aux2.replaceAll(" +", " ");
-            
+
             FileWriter fw = new FileWriter(archivoCargado, false);
             BufferedWriter bw = new BufferedWriter(fw);
-            
+
             bw.write(aux2);
             bw.flush();
             bw.close();
@@ -426,6 +429,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         archivoCargado = null;
         jTable_Display.setModel(new DefaultTableModel(0, 0));
         campos = new ArrayList<String>();
+        jLabelPrincipal.setText("Llave principal: ");
     }//GEN-LAST:event_closeFileActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
@@ -442,8 +446,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void jButton_agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_agregarActionPerformed
         String campo = JOptionPane.showInputDialog("Ingrese el nuevo campo a "
                 + "anexar en los registros:");
-        
-        if (campo == null) return;
+
+        if (campo == null) {
+            return;
+        }
 
         campo = campo.strip().toUpperCase();
 
@@ -458,14 +464,20 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             m.addColumn(campo);
             jTable_Display.setModel(m);
             JOptionPane.showMessageDialog(listCamposPantalla, "Campo agregado exitosamente.");
-            
-            
+
             campos.add(campo);
-            
+            if (!tieneLlavePrincipal) {
+                int opc = JOptionPane.showConfirmDialog(this, "¿Desea hacer este campo su llave principal?");
+                if (opc == JOptionPane.YES_OPTION) {
+                    jLabelPrincipal.setText("Llave principal: " + campo);
+                    //archivoEnUso.setLlavePrincipal(campos.indexOf(campo));
+                    tieneLlavePrincipal = true;
+                }
+            }
             DefaultListModel mod = (DefaultListModel) jList_campos.getModel();
             mod.addElement(campo);
             jList_campos.setModel(mod);
-            
+
             saved = false;
         }
     }//GEN-LAST:event_jButton_agregarActionPerformed
@@ -473,48 +485,53 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void jButton_modificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_modificarActionPerformed
         try {
             int selection = jList_campos.getSelectedIndex();
-            
             DefaultListModel mod = (DefaultListModel) jList_campos.getModel();
-            
+
             // No hay nada seleccionado
-            if (selection == -1) return;
-            
-            
+            if (selection == -1) {
+                return;
+            }
+
             String modificacion = JOptionPane.showInputDialog(jList_campos, "Ingrese el "
                     + " nuevo nombre del campo:", mod.get(selection));
-            
+
             if (modificacion == null || modificacion.strip().equals("")) {
                 return;
             }
-            
+
             modificacion = modificacion.strip().toUpperCase();
-            
-            if(modificacion.equals(mod.getElementAt(selection))) {
+
+            if (modificacion.equals(mod.getElementAt(selection))) {
                 JOptionPane.showMessageDialog(listCamposPantalla, "El nuevo campo es igual al antiguo.",
-                    "Campos iguales.", JOptionPane.INFORMATION_MESSAGE);
+                        "Campos iguales.", JOptionPane.INFORMATION_MESSAGE);
+                int opc = JOptionPane.showConfirmDialog(this, "¿Desea hacer este campo su llave principal?");
+                if (opc == JOptionPane.YES_OPTION) {
+                    jLabelPrincipal.setText("Llave principal: " + modificacion);
+                    //archivoEnUso.setLlavePrincipal(campos.indexOf(campo));
+                }
                 return;
-            } else if(campos.contains(modificacion)) {
+            } else if (campos.contains(modificacion)) {
                 JOptionPane.showMessageDialog(listCamposPantalla, "El campo ingresado ya existe.", "No se"
-                    + " puede modificar el campo", JOptionPane.ERROR_MESSAGE);
+                        + " puede modificar el campo", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            
+
             // Cambiamos el campo en el arreglo, que tiene 
             // los campos en el mismo orden que la lista
             campos.set(selection, modificacion);
-            
+
             // Cambiamos el campo en la lista
             mod.set(selection, modificacion);
+
             jList_campos.setModel(mod);
 
             JOptionPane.showMessageDialog(listCamposPantalla, "Campo modificado con exito",
-                "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
-            
+                    "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
+
             // Modificamos el campo en la tabla.
             DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
             model.setColumnIdentifiers(campos.toArray());
-            
+
             saved = false;
         } catch (Exception E) {
             E.printStackTrace();
@@ -523,30 +540,31 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private void jButton_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_eliminarActionPerformed
         int selection = jList_campos.getSelectedIndex();
-        
+
         // No hay nada seleccionado
-        if (selection == -1) return;
-        
+        if (selection == -1) {
+            return;
+        }
+
         DefaultListModel mod = (DefaultListModel) jList_campos.getModel();
-        
+
         int remove = JOptionPane.showConfirmDialog(listCamposPantalla, "¿Desea eliminar el "
-                + "campo " + ((String)mod.get(selection)) + "?", "Eliminar campo.",
+                + "campo " + ((String) mod.get(selection)) + "?", "Eliminar campo.",
                 JOptionPane.YES_NO_OPTION);
         if (remove != JOptionPane.YES_OPTION) {
             return;
         }
-        
-        
+
         mod.remove(selection);
-        
+
         campos.remove(selection);
-        
+
         DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
         model.setColumnIdentifiers(campos.toArray());
-        
+
         JOptionPane.showMessageDialog(listCamposPantalla, "Campo eliminado con éxito.",
                 "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
-        
+
         saved = false;
     }//GEN-LAST:event_jButton_eliminarActionPerformed
 
@@ -611,6 +629,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton_agregar;
     private javax.swing.JButton jButton_eliminar;
     private javax.swing.JButton jButton_modificar;
+    private javax.swing.JLabel jLabelPrincipal;
     private javax.swing.JLabel jLabel_BG;
     private javax.swing.JLabel jLabel_BG_campos;
     private javax.swing.JLabel jLabel_Title;
@@ -669,7 +688,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         archivoCargado = file;
         jLabel_current.setText("Current file: " + archivoCargado.getName());
         jTable_Display.setModel(new DefaultTableModel(0, 0));
-        
+
         DefaultListModel list_model = new DefaultListModel();
 
         try ( FileReader fr = new FileReader(archivoCargado);  BufferedReader br = new BufferedReader(fr)) {
@@ -677,8 +696,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             try {
                 sc = new Scanner(archivoCargado);
 //                sc.useDelimiter(";");
-                
-                if(sc.hasNext()){
+
+                if (sc.hasNext()) {
                     String line = sc.nextLine();
 //                    System.out.println("line+" + line);
                     String[] data = line.split("\\?");
@@ -690,14 +709,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         list_model.addElement(dataColumn[i]);
                         campos.add(dataColumn[i]);
                     }
-                    
+
                     //Modify the newly created table model
                     DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
                     model.setColumnIdentifiers(dataColumn);
-                    
+
                     //Replace the jList model
                     jList_campos.setModel(list_model);
-                    
+
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -712,4 +731,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private ArrayList<String> campos = new ArrayList<String>();
     private File archivoCargado;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
+    private boolean tieneLlavePrincipal = false;
+    private ArchivoDeRegitstro archivoEnUso;
 }
