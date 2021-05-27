@@ -7,8 +7,9 @@ public class CampoTexto extends Campo {
     public CampoTexto() {
     }
 
-    public CampoTexto(String texto) {
-        this.texto = texto;
+    public CampoTexto(String nombreCampo) {
+        super(nombreCampo);
+        this.texto = "";
     }
 
     public String getTexto() {

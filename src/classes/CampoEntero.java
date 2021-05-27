@@ -6,9 +6,10 @@ public class CampoEntero extends Campo {
     
     public CampoEntero() {
     }
-    
-    public CampoEntero(Integer valor) {
-        this.valor = valor;
+
+    public CampoEntero(String nombreCampo) {
+        super(nombreCampo);
+        this.valor = 0;
     }
     
     public Integer getValor() {

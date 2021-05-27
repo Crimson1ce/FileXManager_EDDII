@@ -2,20 +2,21 @@ package classes;
 
 public class CampoDecimal extends Campo {
 
-    protected Float valor;
-    
+    protected Double valor;
+
     public CampoDecimal() {
     }
 
-    public CampoDecimal(Float valor) {
-        this.valor = valor;
+    public CampoDecimal(String nombreCampo) {
+        super(nombreCampo);
+        this.valor = 0.0;
     }
 
-    public Float getValor() {
+    public Double getValor() {
         return valor;
     }
 
-    public void setValor(Float valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 
@@ -24,7 +25,4 @@ public class CampoDecimal extends Campo {
         return String.valueOf(valor);
     }
 
-    
-    
-    
 }
