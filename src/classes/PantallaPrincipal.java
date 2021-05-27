@@ -486,13 +486,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             String tempLlave = String.valueOf(archivoEnUso.getLlavePrincipal());
 
-            metadata[6] = tempLlave;
-
             String aux2 = Arrays.toString(metadata);
 
             // Cut off the surrounding brackets
             aux2 = aux2.substring(1, aux2.length() - 1);
-
+            if (metadata.length < 7) {
+                aux2 += "?" + tempLlave;
+            } else {
+                metadata[6] = tempLlave;
+            }
             //Replace the commas with ?
             aux2 = aux2.replaceAll(", ", "?");
 
