@@ -793,6 +793,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 //Class temp = archivoEnUso;
             }
         }
+        archivoEnUso.getRegistros().insertarAlFinal(r);
     }//GEN-LAST:event_AgregarRegistroMouseClicked
 
     /**
