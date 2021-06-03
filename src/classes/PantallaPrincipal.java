@@ -765,10 +765,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jList_camposMouseClicked
 
     private void AgregarRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AgregarRegistroMouseClicked
+        System.out.println("Por aqui ando");
         DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
-        int rows = jTable_Display.getRowCount();
+        int rows = jTable_Display.getRowCount()+1;
         Registro r = new Registro();
         for (int i = 0; i < model.getColumnCount(); i++) {
+            System.out.println("Por aqui ando"+i);
             String aux = model.getValueAt(rows - 1, i).toString();
             if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoCaracter) {
                 CampoCaracter temp = new CampoCaracter(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
@@ -786,14 +788,28 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 temp.setValor(valor);
                 r.añadirCampo(temp);
                 //Class temp = archivoEnUso;
-            }else if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoTexto) {
+            } else if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoTexto) {
                 CampoTexto temp = new CampoTexto(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
                 temp.setTexto(aux);
                 r.añadirCampo(temp);
                 //Class temp = archivoEnUso;
             }
         }
+        System.out.println("Por aqui ando fuera del for");
         archivoEnUso.getRegistros().insertarAlFinal(r);
+        archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros() + 1);
+        Object[] row = new Object[archivoEnUso.getCamposDelArchivo().size()];
+        for (int i = 0; i < archivoEnUso.getNoRegistros(); i++) {
+            row[i] = "";
+        }
+        model.addRow(row);
+        for (int i = 0; i < archivoEnUso.getNoRegistros(); i++) {
+            row[i] = r.getCampos().get(i);
+        }
+        model.addRow(row);
+        jTable_Display.setModel(model);
+        System.out.println("Por aqui ando seteando la tabla");
+        System.out.println(r);
     }//GEN-LAST:event_AgregarRegistroMouseClicked
 
     /**
