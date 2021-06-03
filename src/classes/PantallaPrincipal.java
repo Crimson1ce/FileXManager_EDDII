@@ -204,9 +204,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         pantallaCrearCampos.getContentPane().add(labelFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 280));
 
         AgregarRegistro.setText("Agregar Nuevo Registro");
-        AgregarRegistro.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                AgregarRegistroMouseClicked(evt);
+        AgregarRegistro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AgregarRegistroActionPerformed(evt);
             }
         });
         menuRegistros.add(AgregarRegistro);
@@ -764,13 +764,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jList_camposMouseClicked
 
-    private void AgregarRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AgregarRegistroMouseClicked
-        System.out.println("Por aqui ando");
+    private void AgregarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarRegistroActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
-        int rows = jTable_Display.getRowCount()+1;
+        int rows = jTable_Display.getRowCount();
         Registro r = new Registro();
         for (int i = 0; i < model.getColumnCount(); i++) {
-            System.out.println("Por aqui ando"+i);
             String aux = model.getValueAt(rows - 1, i).toString();
             if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoCaracter) {
                 CampoCaracter temp = new CampoCaracter(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
@@ -795,22 +793,21 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 //Class temp = archivoEnUso;
             }
         }
-        System.out.println("Por aqui ando fuera del for");
         archivoEnUso.getRegistros().insertarAlFinal(r);
         archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros() + 1);
         Object[] row = new Object[archivoEnUso.getCamposDelArchivo().size()];
-        for (int i = 0; i < archivoEnUso.getNoRegistros(); i++) {
+        System.out.println(archivoEnUso.getCamposDelArchivo().size());
+        for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
             row[i] = "";
         }
         model.addRow(row);
-        for (int i = 0; i < archivoEnUso.getNoRegistros(); i++) {
-            row[i] = r.getCampos().get(i);
+        for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
+            row[i] = r.getCampos().get(i).toString();
         }
         model.addRow(row);
+        model.removeRow(jTable_Display.getSelectedRow());
         jTable_Display.setModel(model);
-        System.out.println("Por aqui ando seteando la tabla");
-        System.out.println(r);
-    }//GEN-LAST:event_AgregarRegistroMouseClicked
+    }//GEN-LAST:event_AgregarRegistroActionPerformed
 
     /**
      * @param args the command line arguments

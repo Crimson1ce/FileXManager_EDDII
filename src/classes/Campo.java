@@ -18,5 +18,5 @@ public abstract class Campo {
     public void setNombreCampo(String nombreCampo) {
         this.nombreCampo = nombreCampo;
     }
-
+    public abstract String toString();
 }

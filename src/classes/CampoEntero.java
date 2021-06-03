@@ -22,7 +22,7 @@ public class CampoEntero extends Campo {
     
     @Override
     public String toString() {
-        return String.valueOf(valor);
+        return valor.toString();
     }
     
 }
