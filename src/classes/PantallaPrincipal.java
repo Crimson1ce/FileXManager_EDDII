@@ -75,7 +75,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         AgregarRegistro = new javax.swing.JMenuItem();
         SalvarCambiosTemporalmente = new javax.swing.JMenuItem();
         EliminarRegistros = new javax.swing.JMenuItem();
-        jButton1 = new javax.swing.JButton();
         jPanel_BackGround = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable_Display = new javax.swing.JTable();
@@ -205,6 +204,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         pantallaCrearCampos.getContentPane().add(labelFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 280));
 
         AgregarRegistro.setText("Agregar Nuevo Registro");
+        AgregarRegistro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AgregarRegistroMouseClicked(evt);
+            }
+        });
         menuRegistros.add(AgregarRegistro);
 
         SalvarCambiosTemporalmente.setText("Guardar temporalmente");
@@ -216,14 +220,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon("./src/recursos/x.png").getImage());
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jButton1.setText("Agregar Nuevo Registro");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 460, -1, -1));
 
         jPanel_BackGround.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -763,14 +759,41 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable_DisplayMouseClicked
 
     private void jList_camposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList_camposMouseClicked
-       if (evt.isMetaDown()) {
+        if (evt.isMetaDown()) {
             menuRegistros.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_jList_camposMouseClicked
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1MouseClicked
+    private void AgregarRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AgregarRegistroMouseClicked
+        DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
+        int rows = jTable_Display.getRowCount();
+        Registro r = new Registro();
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            String aux = model.getValueAt(rows - 1, i).toString();
+            if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoCaracter) {
+                CampoCaracter temp = new CampoCaracter(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
+                Character valor = aux.charAt(0);
+                temp.setValor(valor);
+                r.añadirCampo(temp);
+            } else if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoDecimal) {
+                CampoDecimal temp = new CampoDecimal(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
+                Double valor = Double.parseDouble(aux);
+                temp.setValor(valor);
+                r.añadirCampo(temp);
+            } else if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoEntero) {
+                CampoEntero temp = new CampoEntero(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
+                Integer valor = Integer.parseInt(aux);
+                temp.setValor(valor);
+                r.añadirCampo(temp);
+                //Class temp = archivoEnUso;
+            }else if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoTexto) {
+                CampoTexto temp = new CampoTexto(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
+                temp.setTexto(aux);
+                r.añadirCampo(temp);
+                //Class temp = archivoEnUso;
+            }
+        }
+    }//GEN-LAST:event_AgregarRegistroMouseClicked
 
     /**
      * @param args the command line arguments
@@ -825,7 +848,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem exportExcel;
     private javax.swing.JMenuItem exportXML;
     private javax.swing.JMenuItem introRegistros;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton_agregar;
     private javax.swing.JButton jButton_eliminar;
     private javax.swing.JButton jButton_modificar;
@@ -945,7 +967,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     //Modify the newly created table model
                     DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
                     model.setColumnIdentifiers(dataColumn);
-
+                    String aux[] = new String[archivoEnUso.getCamposDelArchivo().size()];
+                    for (int i = 0; i < aux.length; i++) {
+                        aux[i] = "";
+                    }
+                    model.addRow(aux);
                     //Replace the jList model
                     jList_campos.setModel(list_model);
 
