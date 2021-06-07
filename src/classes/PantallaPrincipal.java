@@ -769,7 +769,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         int rows = jTable_Display.getRowCount();
         Registro r = new Registro();
         for (int i = 0; i < model.getColumnCount(); i++) {
-            String aux = model.getValueAt(rows - 1, i).toString();
+            String aux = model.getValueAt(0, i).toString();
             if (archivoEnUso.getCamposDelArchivo().get(i) instanceof CampoCaracter) {
                 CampoCaracter temp = new CampoCaracter(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
                 Character valor = aux.charAt(0);
@@ -790,22 +790,29 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 CampoTexto temp = new CampoTexto(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo());
                 temp.setTexto(aux);
                 r.añadirCampo(temp);
-                //Class temp = archivoEnUso;
             }
         }
         archivoEnUso.getRegistros().insertarAlFinal(r);
-        archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros() + 1);
+        System.out.println("--------------------");
+        //model.removeRow(jTable_Display.getSelectedRow());
+        for (int i = 0; i < model.getRowCount(); i++) {
+            model.removeRow(i);
+        }
+        for (int i = 0; i < archivoEnUso.getRegistros().longitud(); i++) {
+            System.out.println(((Registro) archivoEnUso.getRegistros().obtener(i)).getCampos());
+        }
+
         Object[] row = new Object[archivoEnUso.getCamposDelArchivo().size()];
-        System.out.println(archivoEnUso.getCamposDelArchivo().size());
         for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
             row[i] = "";
         }
         model.addRow(row);
-        for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
-            row[i] = r.getCampos().get(i).toString();
+        for (int i = 0; i < archivoEnUso.getRegistros().longitud(); i++) {
+            for (int j = 0; j < archivoEnUso.getCamposDelArchivo().size(); j++) {
+                row[j] = archivoEnUso.getRegistros().obtener(i).getCampos().get(j).toString();
+            }
+            model.addRow(row);
         }
-        model.addRow(row);
-        model.removeRow(jTable_Display.getSelectedRow());
         jTable_Display.setModel(model);
     }//GEN-LAST:event_AgregarRegistroActionPerformed
 

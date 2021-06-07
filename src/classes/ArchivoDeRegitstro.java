@@ -23,7 +23,7 @@ public class ArchivoDeRegitstro {
     public ArchivoDeRegitstro(File archivo) {
         try {
             Scanner sc = new Scanner(archivo);
-
+            this.noRegistros = 0;
             if (sc.hasNext()) {
                 this.camposDelArchivo = new ArrayList<>();
                 this.registros = new LinkedList<>();
