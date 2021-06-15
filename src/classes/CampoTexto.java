@@ -3,6 +3,7 @@ package classes;
 public class CampoTexto extends Campo {
 
     protected String texto;
+    protected int longitud;
 
     public CampoTexto() {
     }
@@ -20,6 +21,15 @@ public class CampoTexto extends Campo {
         this.texto = texto;
     }
 
+    public int getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(int longitud) {
+        this.longitud = longitud;
+    }
+
+    
     @Override
     public String toString() {
         return texto;
