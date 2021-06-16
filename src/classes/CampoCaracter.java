@@ -26,4 +26,10 @@ public class CampoCaracter extends Campo {
         return valor.toString();
     }
 
+    @Override
+    public int compareTo(Campo o) {
+        CampoCaracter comparacion = (CampoCaracter) o;
+        return this.valor.compareTo(comparacion.getValor());
+    }
+
 }

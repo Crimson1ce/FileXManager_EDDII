@@ -24,5 +24,9 @@ public class CampoDecimal extends Campo {
     public String toString() {
         return valor.toString();
     }
-
+@Override
+    public int compareTo(Campo o) {
+        CampoDecimal comparacion = (CampoDecimal) o;
+        return this.valor.compareTo(comparacion.getValor());
+    }
 }

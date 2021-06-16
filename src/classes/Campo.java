@@ -1,6 +1,10 @@
 package classes;
 
-public abstract class Campo {
+import java.io.Serializable;
+
+public abstract class Campo implements Comparable<Campo>, Serializable {
+
+    private static final long serialVersionUID = 777L;
 
     protected String nombreCampo;
 
@@ -18,5 +22,6 @@ public abstract class Campo {
     public void setNombreCampo(String nombreCampo) {
         this.nombreCampo = nombreCampo;
     }
+
     public abstract String toString();
 }

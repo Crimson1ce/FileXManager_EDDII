@@ -29,10 +29,14 @@ public class CampoTexto extends Campo {
         this.longitud = longitud;
     }
 
-    
     @Override
     public String toString() {
         return texto;
     }
 
+    @Override
+    public int compareTo(Campo o) {
+        CampoTexto comparacion = (CampoTexto) o;
+        return this.texto.compareTo(comparacion.getTexto());
+    }
 }

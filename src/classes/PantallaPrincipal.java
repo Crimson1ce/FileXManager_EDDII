@@ -10,9 +10,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -422,23 +424,49 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             File fichero = null;
             //try ( RandomAccessFile raf = new RandomAccessFile(fichero, "rw")) {
-            if (jfc.getFileFilter().getDescription().equals("Archivo de Registro X")) { //si el filtro es archivo de texto
-                String path = jfc.getSelectedFile().getPath();
-                fichero = new File(path + (path.endsWith(".xfile") ? "" : ".xfile"));//agarre el archivo y concatene la extension
-            } else {
-                int replace = JOptionPane.showConfirmDialog(this, "¿Desea "
-                        + "reemplazar el archivo existente?", "Reemplazar archivo.",
-                        JOptionPane.YES_NO_OPTION);
-                if (replace != JOptionPane.YES_OPTION) {
-                    return;
+            if (jfc.getFileFilter().getDescription().equals("Archivo de Registro X")) {
+                FileOutputStream fs = null;
+                try {
+                    //si el filtro es archivo de texto
+                    String path = jfc.getSelectedFile().getPath();
+                    fichero = new File(path + (path.endsWith(".xfile") ? "" : ".xfile"));//agarre el archivo y concatene la extension
+                    String indexFileName = path;
+                    System.out.println(path);
+                    File archivoIndicesAux = new File(indexFileName + ".index");
+                    fs = new FileOutputStream(archivoIndicesAux);
+                    ObjectOutputStream os = new ObjectOutputStream(fs);
+                    BTree<Campo, Integer> indices = new BTree<>(3);
+                    os.writeObject(indices);
+                    os.flush();
+                    os.close();
+                    archivoIndices = archivoIndicesAux;
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        fs.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                fichero = jfc.getSelectedFile();//capture el selected file
             }
+//            } else {
+//                
+//                int replace = JOptionPane.showConfirmDialog(this, "¿Desea "
+//                        + "reemplazar el archivo existente?", "Reemplazar archivo.",
+//                        JOptionPane.YES_NO_OPTION);
+//                if (replace != JOptionPane.YES_OPTION) {
+//                    return;
+//                }
+//                fichero = jfc.getSelectedFile();//capture el selected file
+//            }
             InsertMetadataInNewFile(fichero);
-            
+
             JOptionPane.showMessageDialog(this, "Archivo creado exitosamente.");
             archivoCargado = fichero;
-            archivoEnUso = new ArchivoDeRegitstro(archivoCargado);
+            archivoEnUso = new ArchivoDeRegitstro(archivoCargado, archivoIndices);
             jLabel_current.setText("Current file: " + archivoCargado.getName());
             jTable_Display.setModel(new DefaultTableModel(0, 0));
             //archivoTemporal = new File(archivoCargado.getPath() + archivoCargado.getName() + "-temp.xfile");
@@ -463,7 +491,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             jfc.setFileFilter(filtro);//forma 1: marcado como seleccionado
             int seleccion = jfc.showOpenDialog(this);
             if (seleccion == JFileChooser.APPROVE_OPTION && jfc.getSelectedFile().isFile()) {
-                loadFile(jfc.getSelectedFile());
+                File archiAuxNoSeCual = jfc.getSelectedFile();
+                String pathParaCargar = archiAuxNoSeCual.getPath();
+                File archivoIndicesACargar = new File(pathParaCargar);
+                loadFile(archiAuxNoSeCual, archivoIndicesACargar);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -597,16 +628,16 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             if (selection == -1) {
                 return;
             }
-            
+
             String modificacion = JOptionPane.showInputDialog(jList_campos, "Ingrese el "
                     + " nuevo nombre del campo:", mod.get(selection));
-            
+
             if (modificacion == null || modificacion.strip().equals("")) {
                 return;
             }
-            
+
             modificacion = modificacion.strip().toUpperCase();
-            
+
             if (modificacion.equals(mod.getElementAt(selection))) {
                 JOptionPane.showMessageDialog(listCamposPantalla, "El nuevo campo es igual al antiguo.",
                         "Campos iguales.", JOptionPane.INFORMATION_MESSAGE);
@@ -652,9 +683,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 archivoEnUso.getCamposDelArchivo().set(selection, temp);
                 // Cambiamos el campo en la lista
                 mod.set(selection, modificacion);
-                
+
                 jList_campos.setModel(mod);
-                
+
                 JOptionPane.showMessageDialog(listCamposPantalla, "Campo modificado con exito",
                         "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
 
@@ -668,7 +699,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 saved = false;
                 return;
             }
-            
+
         } catch (Exception E) {
             E.printStackTrace();
         }
@@ -680,9 +711,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         if (selection == -1) {
             return;
         }
-        
+
         DefaultListModel mod = (DefaultListModel) jList_campos.getModel();
-        
+
         int remove = JOptionPane.showConfirmDialog(listCamposPantalla, "¿Desea eliminar el "
                 + "campo " + ((String) mod.get(selection)) + "?", "Eliminar campo.",
                 JOptionPane.YES_NO_OPTION);
@@ -696,9 +727,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             return;
         } else {
             mod.remove(selection);
-            
+
             archivoEnUso.getCamposDelArchivo().remove(selection);
-            
+
             DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
             String dataAux[] = new String[archivoEnUso.getCamposDelArchivo().size()];
             for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
@@ -708,7 +739,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             InsertMetadataInNewFile(archivoCargado);
             JOptionPane.showMessageDialog(listCamposPantalla, "Campo eliminado con éxito.",
                     "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
-            
+
             saved = false;
         }
     }//GEN-LAST:event_jButton_eliminarActionPerformed
@@ -726,7 +757,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void CrearCampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CrearCampoMouseClicked
         String nombreCampo = tf_NombreCampo.getText();
         nombreCampo = nombreCampo.strip().toUpperCase();
-        
+
         boolean repetido = false;
         if (nombreCampo == null || nombreCampo.equals("")) {
             return;
@@ -755,7 +786,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
             m.addColumn(nombreCampo);
             jTable_Display.setModel(m);
-            
+
             if (tipoEntero.isSelected()) {
                 CampoEntero campo = new CampoEntero(nombreCampo + "_int");
                 archivoEnUso.getCamposDelArchivo().add(campo);
@@ -775,13 +806,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 tieneLlavePrincipal = true;
             }
             if (!tieneLlavePrincipal) {
-                
+
                 if (rb_LlavePrincipal.isSelected()) {
                     jLabelPrincipal.setText("Llave principal: " + nombreCampo);
                     archivoEnUso.setLlavePrincipal(archivoEnUso.getCamposDelArchivo().size() - 1);
                     tieneLlavePrincipal = true;
                 }
-                
+
             }
             if (rb_LlaveSecundaria.isSelected()) {
                 archivoEnUso.getSecundarias().add(archivoEnUso.getCamposDelArchivo().size() - 1);
@@ -790,7 +821,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             DefaultListModel mod = (DefaultListModel) jList_campos.getModel();
             mod.addElement(nombreCampo);
             jList_campos.setModel(mod);
-            
+
             saved = false;
             tf_NombreCampo.setText("");
             tipoString.setSelected(true);
@@ -1002,12 +1033,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         raf.writeInt(((CampoTexto) archivoEnUso.getCamposDelArchivo().get(i)).getLongitud());
                     }
                 }
+                raf.writeChar('\n');
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     private boolean verifyOpen() {
         if (archivoCargado == null) {
             JOptionPane.showMessageDialog(this, "Debe abrir un archivo para "
@@ -1018,13 +1050,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             return true;
         }
     }
-    
-    private void loadFile(File file) {
+
+    private void loadFile(File file, File fileIndices) {
         if (file == null) {
             return;
         }
         archivoCargado = file;
-        archivoEnUso = new ArchivoDeRegitstro(archivoCargado);
+        archivoIndices = fileIndices;
+        archivoEnUso = new ArchivoDeRegitstro(archivoCargado, archivoIndices);
         jLabel_current.setText("Current file: " + archivoCargado.getName());
         jTable_Display.setModel(new DefaultTableModel(0, 0));
         DefaultListModel list_model = new DefaultListModel();
@@ -1074,7 +1107,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         } catch (IOException e) {
         }
     }
-    
+
     private void InsertRegistersLoadedInMemory(ArrayList<Registro> registros, File archivoC, ArchivoDeRegitstro archivoR) {
         try ( RandomAccessFile raf = new RandomAccessFile(archivoC, "rw")) {
             raf.seek(0);
@@ -1083,21 +1116,22 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             raf.seek(finalDelArchivo);
             for (int i = 0; i < registros.size(); i++) {
                 for (int j = 0; j < archivoR.getCamposDelArchivo().size(); j++) {
-                    
+
                 }
             }
         } catch (IOException e) {
         }
-        
+
     }
     private LinkedList AvailList = new LinkedList();
     private File archivoCargado;
+    private File archivoIndices;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
     private boolean tieneLlavePrincipal = false;
     private ArchivoDeRegitstro archivoEnUso;
     private ArrayList<Registro> registrosEnMemoria;
     private boolean nuevo = false;
-    
+
 }
 //try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
 //                raf.seek(0);
