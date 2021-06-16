@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 public class Registro {
 
-    protected ArrayList<Campo> Campos = new ArrayList<>();
+    protected ArrayList<Campo> Campos;
 
-    public Registro() {
+    public Registro(int numCampos) {
+        Campos = new ArrayList<>(numCampos);
     }
 
     public ArrayList<Campo> getCampos() {

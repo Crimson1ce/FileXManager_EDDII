@@ -161,5 +161,24 @@ public class ArchivoDeRegitstro {
     public int tamanioMetadata() {
         return offsetInicial;
     }
+    
+    public int longitudRegistro() {
+        int ret = 0;
+        
+        for (int i = 0; i < this.camposDelArchivo.size(); i++) {
+            Campo c = camposDelArchivo.get(i);
+            if(c instanceof CampoEntero) {
+                ret += 4;
+            } else if (c instanceof CampoDecimal) {
+                ret += 8;
+            } else if (c instanceof CampoCaracter) {
+                ret += 2;
+            } else {
+                ret += 2 + ((CampoTexto)c).getLongitud();
+            }
+        }
+        
+        return ret + 2;
+    }
 
 }
