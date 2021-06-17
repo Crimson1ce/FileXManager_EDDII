@@ -195,7 +195,13 @@ public class ArchivoDeRegitstro {
         return arbolIndices;
     }
 
-    public void updateTree(File fileIndices) {
+    public File updateTree(File fileIndices) {
+        
+        String path = fileIndices.getPath();
+        fileIndices.delete();
+        
+        fileIndices = new File(path);
+        
         try (FileOutputStream fs = new FileOutputStream(fileIndices, false);
                 ObjectOutputStream os = new ObjectOutputStream(fs)) {
             
@@ -206,6 +212,7 @@ public class ArchivoDeRegitstro {
         } catch (IOException ex) {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return fileIndices;
     }
 
 }

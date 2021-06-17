@@ -553,7 +553,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             int seleccion = jfc.showOpenDialog(this);
             if (seleccion == JFileChooser.APPROVE_OPTION && jfc.getSelectedFile().isFile()) {
                 File archiAuxNoSeCual = jfc.getSelectedFile();
+                
                 String pathParaCargar = archiAuxNoSeCual.getPath();
+                
+                if (pathParaCargar.endsWith(".xfile")) {
+                    pathParaCargar = pathParaCargar.substring(0, pathParaCargar.length() - 6);
+                    pathParaCargar += ".index";
+                }
+                
+//                System.out.println(pathParaCargar);
                 File archivoIndicesACargar = new File(pathParaCargar);
                 loadFile(archiAuxNoSeCual, archivoIndicesACargar);
             }
@@ -1088,11 +1096,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     }
                     return;
                 }
-                archivoEnUso.updateTree(archivoIndices);
+                archivoIndices = archivoEnUso.updateTree(archivoIndices);
                 return;
             }
         }
 
+        archivoIndices = archivoEnUso.updateTree(archivoIndices);
         escribirRegistro(r, RRN);
         jd_nuevoRegistro.setVisible(false);
 
