@@ -32,4 +32,12 @@ public class CampoCaracter extends Campo {
         return this.valor.compareTo(comparacion.getValor());
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CampoCaracter)) return false;
+        
+        CampoCaracter c = (CampoCaracter) obj;
+        return this.valor.equals(c.valor);
+    }
+
 }

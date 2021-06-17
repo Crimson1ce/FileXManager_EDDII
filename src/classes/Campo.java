@@ -1,6 +1,7 @@
 package classes;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public abstract class Campo implements Comparable<Campo>, Serializable {
 
@@ -23,5 +24,17 @@ public abstract class Campo implements Comparable<Campo>, Serializable {
         this.nombreCampo = nombreCampo;
     }
 
+    @Override
     public abstract String toString();
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public abstract boolean equals(Object obj);
+    
+    
 }

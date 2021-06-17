@@ -1,4 +1,4 @@
-package classes;
+package classes ;
 
 public class CampoTexto extends Campo {
 
@@ -18,6 +18,15 @@ public class CampoTexto extends Campo {
     }
 
     public void setTexto(String texto) {
+        
+        if(texto.length() > this.longitud) {
+            texto = texto.substring(0, longitud);
+        } else {
+            for (int i = texto.length(); i < longitud; i++) {
+                texto += " ";
+            }
+        }
+        System.out.println("Después del set" + texto);
         this.texto = texto;
     }
 
@@ -39,4 +48,14 @@ public class CampoTexto extends Campo {
         CampoTexto comparacion = (CampoTexto) o;
         return this.texto.compareTo(comparacion.getTexto());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CampoTexto)) return false;
+        
+        CampoTexto c = (CampoTexto) obj;
+        return this.texto.equals(c.texto);
+    }
+    
+    
 }

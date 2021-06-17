@@ -29,4 +29,12 @@ public class CampoDecimal extends Campo {
         CampoDecimal comparacion = (CampoDecimal) o;
         return this.valor.compareTo(comparacion.getValor());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CampoDecimal)) return false;
+        
+        CampoDecimal c = (CampoDecimal) obj;
+        return this.valor.equals(c.valor);
+    }
 }

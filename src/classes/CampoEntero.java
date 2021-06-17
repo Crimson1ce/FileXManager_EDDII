@@ -30,4 +30,12 @@ public class CampoEntero extends Campo {
         CampoEntero comparacion = (CampoEntero) o;
         return this.valor.compareTo(comparacion.getValor());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CampoEntero)) return false;
+        
+        CampoEntero c = (CampoEntero) obj;
+        return this.valor.equals(c.valor);
+    }
 }

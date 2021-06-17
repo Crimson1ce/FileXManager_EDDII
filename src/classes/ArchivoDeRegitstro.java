@@ -2,14 +2,16 @@ package classes;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +25,6 @@ public class ArchivoDeRegitstro {
     protected ArrayList<Campo> camposDelArchivo;
     protected LinkedList<Integer> AvailList;
     protected BTree<Campo, Integer> arbolIndices;
-    protected int offsetInicial = 43;
 
     public ArchivoDeRegitstro() {
     }
@@ -56,7 +57,6 @@ public class ArchivoDeRegitstro {
                     } catch (NumberFormatException e) {
                     }
                 }
-                this.offsetInicial += 4 * auxSecundarias;
             } catch (Exception e) {
                 //e.printStackTrace();
             }
@@ -71,27 +71,29 @@ public class ArchivoDeRegitstro {
                         this.camposDelArchivo.add(new CampoDecimal(aux));
                     } else if (aux.endsWith("_str")) {
                         CampoTexto campoNuevo = new CampoTexto(aux);
-                        this.offsetInicial += 4;
                         campoNuevo.setLongitud(raf.readInt());
                         this.camposDelArchivo.add(campoNuevo);
                     } else if (aux.endsWith("_car")) {
                         this.camposDelArchivo.add(new CampoCaracter(aux));
                     }
                 }
-                this.offsetInicial += 29 * cantidadCampos;
             } catch (Exception e) {
                 //e.printStackTrace();
             }
             FileInputStream indices = new FileInputStream(archivoArbol);
             ObjectInputStream os = new ObjectInputStream(indices);
-            BTree<Campo, Integer> arbolAux = null;
-            arbolAux = (BTree<Campo, Integer>)os.readObject();
+
+            BTree<Campo, Integer> arbolAux = (BTree<Campo, Integer>) os.readObject();
+
+            this.arbolIndices = arbolAux;
 
         } catch (IOException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ArchivoDeRegitstro.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println(this.arbolIndices.toString());
+        
     }
 
     public ArchivoDeRegitstro(int llavePrincipal, Date fechaCreacion, int noRegistros, int cabezaAvail, ArrayList<Campo> camposDelArchivo) {
@@ -159,26 +161,51 @@ public class ArchivoDeRegitstro {
     }
 
     public int tamanioMetadata() {
-        return offsetInicial;
+        int total = 43 + (4 * secundarias.size()) + (31 * camposDelArchivo.size());
+
+        for (int i = 0; i < camposDelArchivo.size(); i++) {
+            if (camposDelArchivo.get(i) instanceof CampoTexto) {
+                total += 4;
+            }
+        }
+
+        return total;
     }
-    
+
     public int longitudRegistro() {
         int ret = 0;
-        
+
         for (int i = 0; i < this.camposDelArchivo.size(); i++) {
             Campo c = camposDelArchivo.get(i);
-            if(c instanceof CampoEntero) {
+            if (c instanceof CampoEntero) {
                 ret += 4;
             } else if (c instanceof CampoDecimal) {
                 ret += 8;
             } else if (c instanceof CampoCaracter) {
                 ret += 2;
             } else {
-                ret += 2 + ((CampoTexto)c).getLongitud();
+                ret += 2 + ((CampoTexto) c).getLongitud();
             }
         }
-        
-        return ret + 2;
+
+        return ret + 2; //Sumamos 2 por la escritura del newline con el writeChars() method
+    }
+
+    public BTree<Campo, Integer> getArbolIndices() {
+        return arbolIndices;
+    }
+
+    public void updateTree(File fileIndices) {
+        try (FileOutputStream fs = new FileOutputStream(fileIndices, false);
+                ObjectOutputStream os = new ObjectOutputStream(fs)) {
+            
+            os.writeObject(this.arbolIndices);
+            os.flush();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
