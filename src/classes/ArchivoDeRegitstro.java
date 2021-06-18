@@ -197,10 +197,10 @@ public class ArchivoDeRegitstro {
 
     public File updateTree(File fileIndices) {
         
-        String path = fileIndices.getPath();
-        fileIndices.delete();
-        
-        fileIndices = new File(path);
+//        String path = fileIndices.getPath();
+//        fileIndices.delete();
+//        
+//        fileIndices = new File(path);
         
         try (FileOutputStream fs = new FileOutputStream(fileIndices, false);
                 ObjectOutputStream os = new ObjectOutputStream(fs)) {

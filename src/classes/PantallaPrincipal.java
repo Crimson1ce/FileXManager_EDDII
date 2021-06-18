@@ -5,6 +5,7 @@
  */
 package classes;
 
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -31,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.io.RandomAccessFile;
+import javax.swing.table.DefaultTableColumnModel;
 
 /**
  *
@@ -44,6 +46,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     public PantallaPrincipal() {
         initComponents();
         this.setLocationRelativeTo(null);
+        
     }
 
     /**
@@ -91,6 +94,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jb_crearRegistro = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jd_buscarRegistro = new javax.swing.JDialog();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jt_busqueda = new javax.swing.JTable();
+        jtf_buscar = new javax.swing.JTextField();
+        jb_buscarRegistro = new javax.swing.JButton();
+        jb_clearCargado = new javax.swing.JButton();
+        jb_modificarRegistro = new javax.swing.JButton();
+        jb_eliminarRegistro = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jPanel_BackGround = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable_Display = new javax.swing.JTable();
@@ -295,7 +309,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jt_campos.setColumnSelectionAllowed(true);
         jScrollPane4.setViewportView(jt_campos);
 
-        jd_nuevoRegistro.getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 590, 300));
+        jd_nuevoRegistro.getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 590, 290));
 
         jb_crearRegistro.setText("Aceptar");
         jb_crearRegistro.addActionListener(new java.awt.event.ActionListener() {
@@ -307,8 +321,91 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("BankGothic Md BT", 3, 36)); // NOI18N
         jLabel5.setText("Nuevo Registro");
-        jd_nuevoRegistro.getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 20, -1, -1));
+        jd_nuevoRegistro.getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 370, -1));
+
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado_3.png"))); // NOI18N
         jd_nuevoRegistro.getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 720, 450));
+
+        jd_buscarRegistro.setResizable(false);
+        jd_buscarRegistro.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jt_busqueda.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Campos", "Valores"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jt_busqueda.setColumnSelectionAllowed(true);
+        jScrollPane5.setViewportView(jt_busqueda);
+
+        jd_buscarRegistro.getContentPane().add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, 590, 270));
+        jd_buscarRegistro.getContentPane().add(jtf_buscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 70, 410, 30));
+
+        jb_buscarRegistro.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
+        jb_buscarRegistro.setText("Buscar");
+        jb_buscarRegistro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_buscarRegistroActionPerformed(evt);
+            }
+        });
+        jd_buscarRegistro.getContentPane().add(jb_buscarRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(109, 70, 80, 30));
+
+        jb_clearCargado.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jb_clearCargado.setText("Clear");
+        jb_clearCargado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_clearCargadoActionPerformed(evt);
+            }
+        });
+        jd_buscarRegistro.getContentPane().add(jb_clearCargado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 400, -1, -1));
+
+        jb_modificarRegistro.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jb_modificarRegistro.setText("Modificar Registro");
+        jb_modificarRegistro.setEnabled(false);
+        jb_modificarRegistro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_modificarRegistroActionPerformed(evt);
+            }
+        });
+        jd_buscarRegistro.getContentPane().add(jb_modificarRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 400, 140, -1));
+
+        jb_eliminarRegistro.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jb_eliminarRegistro.setText("Eliminar Registro");
+        jb_eliminarRegistro.setEnabled(false);
+        jb_eliminarRegistro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_eliminarRegistroActionPerformed(evt);
+            }
+        });
+        jd_buscarRegistro.getContentPane().add(jb_eliminarRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 400, 140, -1));
+
+        jLabel7.setFont(new java.awt.Font("BankGothic Md BT", 3, 36)); // NOI18N
+        jLabel7.setText("Buscar Registro");
+        jd_buscarRegistro.getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(177, 20, 370, -1));
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado_3.png"))); // NOI18N
+        jd_buscarRegistro.getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 720, 450));
+
+        jLabel9.setFont(new java.awt.Font("BankGothic Md BT", 3, 36)); // NOI18N
+        jLabel9.setText("Buscar Registro");
+        jd_buscarRegistro.getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 370, -1));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon("./src/recursos/x.png").getImage());
@@ -432,6 +529,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         Registros.add(modRegistros);
 
         searchRegistros.setText("Buscar Registros");
+        searchRegistros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchRegistrosActionPerformed(evt);
+            }
+        });
         Registros.add(searchRegistros);
 
         deleteRegistros.setText("Borrar Registros");
@@ -446,11 +548,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         Indices.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         newIndex.setText("Crear Indices");
-        newIndex.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newIndexActionPerformed(evt);
-            }
-        });
         Indices.add(newIndex);
 
         reindexFile.setText("Re-indexar Archivos");
@@ -487,9 +584,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         int seleccion = jfc.showSaveDialog(this); // muestre la ventana
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             File fichero = null;
-            
+
             String path = jfc.getSelectedFile().getPath();
-            
+
             if (!path.endsWith(".xfile")) {
                 FileOutputStream fs = null;
                 try {
@@ -517,7 +614,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     }
                 }
             } else {
-                
+
                 JOptionPane.showMessageDialog(this, "El archivo ya existe.", "Error.",
                         JOptionPane.ERROR_MESSAGE);
                 nuevo = false;
@@ -553,14 +650,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             int seleccion = jfc.showOpenDialog(this);
             if (seleccion == JFileChooser.APPROVE_OPTION && jfc.getSelectedFile().isFile()) {
                 File archiAuxNoSeCual = jfc.getSelectedFile();
-                
+
                 String pathParaCargar = archiAuxNoSeCual.getPath();
-                
+
                 if (pathParaCargar.endsWith(".xfile")) {
                     pathParaCargar = pathParaCargar.substring(0, pathParaCargar.length() - 6);
                     pathParaCargar += ".index";
                 }
-                
+
 //                System.out.println(pathParaCargar);
                 File archivoIndicesACargar = new File(pathParaCargar);
                 loadFile(archiAuxNoSeCual, archivoIndicesACargar);
@@ -983,22 +1080,21 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_tipoStringStateChanged
 
     private void jb_crearRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_crearRegistroActionPerformed
-        
+
         if (jt_campos.getCellEditor() != null) {
             jt_campos.getCellEditor().stopCellEditing();
         }
-        
-        DefaultTableModel mod = (DefaultTableModel) jt_campos.getModel();
-        
-        //JOptionPane.showMessageDialog(jd_nuevoRegistro, "Escribiendo el registro en el archivo.");
 
+        DefaultTableModel mod = (DefaultTableModel) jt_campos.getModel();
+
+        //JOptionPane.showMessageDialog(jd_nuevoRegistro, "Escribiendo el registro en el archivo.");
         Registro r = new Registro(mod.getRowCount());
-        
+
         int lp = archivoEnUso.getLlavePrincipal();
-        
+
         //Validar al implementar availlist
         int RRN = archivoEnUso.getNoRegistros();
-        
+
         for (int i = 0; i < mod.getRowCount(); i++) {
             String value = (String) (mod.getValueAt(i, 1) == null ? "" : mod.getValueAt(i, 1));
             String nomCampo = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
@@ -1006,72 +1102,65 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             try {
                 if (nomCampo.endsWith("int")) {
                     CampoEntero campo = new CampoEntero("");
-                    int df;
-                    try {
-                        df = Integer.parseInt(value);
-                    } catch (Exception e) {
-                        df = 0;
-                        e.printStackTrace();
-                    }
-                    
+                    int df = Integer.parseInt(value);
                     campo.setValor(df);
-                    
-                    if(i == lp) {
-                        if(!archivoEnUso.getArbolIndices().insert(campo, RRN)) {
-                            JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor de la llave principal ya existe.", 
+
+                    if (i == lp) {
+                        if (!archivoEnUso.getArbolIndices().insert(campo, RRN)) {
+                            JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor de la llave principal ya existe.",
                                     "Llave principal repetida.", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                     }
-                    
+
                     r.añadirCampo(campo);
                 } else if (nomCampo.endsWith("dec")) {
                     CampoDecimal campo = new CampoDecimal("");
                     campo.setValor(Double.parseDouble(value));
-                    
-                    if(i == lp) {
-                        if(!archivoEnUso.getArbolIndices().insert(campo, RRN)) {
-                            JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor de la llave principal ya existe.", 
+
+                    if (i == lp) {
+                        if (!archivoEnUso.getArbolIndices().insert(campo, RRN)) {
+                            JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor de la llave principal ya existe.",
                                     "Llave principal repetida.", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                     }
-                    
+
                     r.añadirCampo(campo);
                 } else if (nomCampo.endsWith("car")) {
                     CampoCaracter campo = new CampoCaracter("");
                     campo.setValor(value.charAt(0));
-                    
-                    if(i == lp) {
-                        if(!archivoEnUso.getArbolIndices().insert(campo, RRN)) {
-                            JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor de la llave principal ya existe.", 
+
+                    if (i == lp) {
+                        if (!archivoEnUso.getArbolIndices().insert(campo, RRN)) {
+                            JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor de la llave principal ya existe.",
                                     "Llave principal repetida.", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                     }
-                    
+
                     r.añadirCampo(campo);
                 } else {
                     CampoTexto campo = new CampoTexto("");
-                    campo.setLongitud(((CampoTexto)archivoEnUso.getCamposDelArchivo().get(i)).getLongitud());
+                    campo.setLongitud(((CampoTexto) archivoEnUso.getCamposDelArchivo().get(i)).getLongitud());
                     System.out.println("Antes del set" + value);
                     campo.setTexto(value);
-                    
-                    if(i == lp) {
-                        if(!archivoEnUso.getArbolIndices().insert(campo, RRN)) {
-                            JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor de la llave principal ya existe.", 
+
+                    if (i == lp) {
+                        if (!archivoEnUso.getArbolIndices().insert(campo, RRN)) {
+                            JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor de la llave principal ya existe.",
                                     "Llave principal repetida.", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                     }
-                    
+
                     r.añadirCampo(campo);
                 }
             } catch (NumberFormatException | IndexOutOfBoundsException e) {
                 JOptionPane.showMessageDialog(jd_nuevoRegistro, "El valor del campo \""
                         + (String) mod.getValueAt(i, 0) + "\" no es válido.", "Error.", JOptionPane.ERROR_MESSAGE);
-                
-                if(i > lp) {
+
+                if (i > lp) {
                     if (archivoEnUso.getCamposDelArchivo().get(lp).getNombreCampo().endsWith("int")) {
                         CampoEntero camp = new CampoEntero();
                         int valor = Integer.parseInt((String) (mod.getValueAt(lp, 1)));
@@ -1090,13 +1179,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     } else {
                         CampoTexto camp = new CampoTexto();
                         String valor = (String) (mod.getValueAt(lp, 1));
-                        camp.setLongitud(((CampoTexto)archivoEnUso.getCamposDelArchivo().get(lp)).getLongitud());
+                        camp.setLongitud(((CampoTexto) archivoEnUso.getCamposDelArchivo().get(lp)).getLongitud());
                         camp.setTexto(valor);
                         archivoEnUso.getArbolIndices().remove(camp);
                     }
                     return;
                 }
                 archivoIndices = archivoEnUso.updateTree(archivoIndices);
+                
+                JOptionPane.showMessageDialog(jd_nuevoRegistro, "Registro insertado con éxito.", 
+                        "EXITO", JOptionPane.INFORMATION_MESSAGE);
+                
                 return;
             }
         }
@@ -1108,13 +1201,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jb_crearRegistroActionPerformed
 
     private void introRegistrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_introRegistrosActionPerformed
-        
+
         if (!verifyOpen()) {
             return;
         }
-        
+
         saveFileActionPerformed(evt);
-        
+
         if (archivoEnUso.getLlavePrincipal() == -1) {
             JOptionPane.showMessageDialog(this, "No se puede insertar registros mientras no "
                     + "se haya seleccionado una llave principal.", "No hay llave principal.", JOptionPane.ERROR_MESSAGE);
@@ -1146,9 +1239,151 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jd_nuevoRegistro.setVisible(true);
     }//GEN-LAST:event_introRegistrosActionPerformed
 
-    private void newIndexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newIndexActionPerformed
+    private void searchRegistrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchRegistrosActionPerformed
+
+        if (!verifyOpen()) {
+            return;
+        }
+
+        saveFileActionPerformed(evt);
+
+        if (archivoEnUso.getLlavePrincipal() == -1) {
+            JOptionPane.showMessageDialog(this, "No se pueden buscar registros mientras no "
+                    + "se haya seleccionado una llave principal.", "No hay llave principal.", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (archivoEnUso.getNoRegistros() == 0) {
+            JOptionPane.showMessageDialog(this, "No se han insertado registros en el archivo.",
+                    "No hay registros.", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        DefaultTableModel mod = (DefaultTableModel) jt_busqueda.getModel();
+
+        Object[] columIden = {
+            "Campos",
+            "Valores"
+        };
+
+        Object[][] dataVector = new Object[archivoEnUso.getCamposDelArchivo().size()][2];
+        for (int i = 0; i < dataVector.length; i++) {
+            dataVector[i][0] = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25).strip();
+            dataVector[i][1] = "";
+
+        }
+
+        // Añadimos los datos a la tabla
+        mod.setDataVector(dataVector, columIden);
+
+        jt_busqueda.setModel(mod);
+        
+        jb_eliminarRegistro.setEnabled(false);
+        jb_modificarRegistro.setEnabled(false);
+
+        jd_buscarRegistro.pack();
+        jd_buscarRegistro.setModal(true);
+        jd_buscarRegistro.setLocationRelativeTo(this);
+        jd_buscarRegistro.setVisible(true);
+    }//GEN-LAST:event_searchRegistrosActionPerformed
+
+    private void jb_buscarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_buscarRegistroActionPerformed
+
+        try {
+
+            String valueToSearch = jtf_buscar.getText();
+
+            if (valueToSearch == null || valueToSearch.isEmpty()) {
+                return;
+            }
+
+            int lp = archivoEnUso.getLlavePrincipal();
+            BTree<Campo, Integer> tree = archivoEnUso.getArbolIndices();
+            String nombreCampo = archivoEnUso.getCamposDelArchivo().get(lp).getNombreCampo();
+
+            Pair<BTree.Node<Campo, Integer>, Integer> pair;
+            int tipo = 0;
+
+            if (nombreCampo.endsWith("int")) {
+                Integer val = Integer.parseInt(valueToSearch);
+                CampoEntero campo = new CampoEntero();
+                campo.setValor(val);
+                pair = tree.search(campo);
+                tipo = 1;
+            } else if (nombreCampo.endsWith("dec")) {
+                Double val = Double.parseDouble(valueToSearch);
+                CampoDecimal campo = new CampoDecimal();
+                campo.setValor(val);
+                pair = tree.search(campo);
+                tipo = 2;
+            } else if (nombreCampo.endsWith("car")) {
+                Character val = valueToSearch.charAt(0);
+                CampoCaracter campo = new CampoCaracter(val);
+                pair = tree.search(campo);
+                tipo = 3;
+            } else {
+                CampoTexto campo = new CampoTexto();
+                campo.setLongitud(((CampoTexto) archivoEnUso.getCamposDelArchivo().get(lp)).getLongitud());
+                campo.setTexto(valueToSearch);
+                pair = tree.search(campo);
+                tipo = 4;
+            }
+
+            if (pair == null) {
+                JOptionPane.showMessageDialog(jd_buscarRegistro, "No existe un registro con la llave especificada.",
+                        "Búsqueda fallida.", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            BTree.Node<Campo, Integer> nodo = pair.getPrimero();
+            int indice = pair.getSegundo();
+
+            BTree.Entry<Campo, Integer> entry = nodo.getEntry(indice);
+            int RRN = entry.getValue();
+
+            cargarRegistro(RRN);
+            
+            jb_eliminarRegistro.setEnabled(true);
+            
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jb_buscarRegistroActionPerformed
+
+    private void jb_clearCargadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_clearCargadoActionPerformed
+        DefaultTableModel mod = (DefaultTableModel) jt_busqueda.getModel();
+
+        Object[] columIden = {
+            "Campos",
+            "Valores"
+        };
+
+        Object[][] dataVector = new Object[archivoEnUso.getCamposDelArchivo().size()][2];
+        for (int i = 0; i < dataVector.length; i++) {
+            dataVector[i][0] = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25).strip();
+            dataVector[i][1] = "";
+
+        }
+
+        // Añadimos los datos a la tabla
+        mod.setDataVector(dataVector, columIden);
+
+        jt_busqueda.setModel(mod);
+        
+        jb_eliminarRegistro.setEnabled(false);
+        jb_modificarRegistro.setEnabled(false);
+        
+        registroCargado = null;
+        
+    }//GEN-LAST:event_jb_clearCargadoActionPerformed
+
+    private void jb_modificarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_modificarRegistroActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_newIndexActionPerformed
+    }//GEN-LAST:event_jb_modificarRegistroActionPerformed
+
+    private void jb_eliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_eliminarRegistroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jb_eliminarRegistroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1213,6 +1448,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelPrincipal;
     private javax.swing.JLabel jLabel_BG;
     private javax.swing.JLabel jLabel_BG_campos;
@@ -1225,11 +1463,19 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable_Display;
+    private javax.swing.JButton jb_buscarRegistro;
+    private javax.swing.JButton jb_clearCargado;
     private javax.swing.JButton jb_crearRegistro;
+    private javax.swing.JButton jb_eliminarRegistro;
+    private javax.swing.JButton jb_modificarRegistro;
+    private javax.swing.JDialog jd_buscarRegistro;
     private javax.swing.JDialog jd_nuevoRegistro;
     private javax.swing.JSpinner js_tamanioCadena;
+    private javax.swing.JTable jt_busqueda;
     private javax.swing.JTable jt_campos;
+    private javax.swing.JTextField jtf_buscar;
     private javax.swing.JLabel labelFondo;
     private javax.swing.JDialog listCamposPantalla;
     private javax.swing.JMenuItem listRegistros;
@@ -1252,8 +1498,89 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JRadioButton tipoString;
     // End of variables declaration//GEN-END:variables
 
-    private void escribirRegistro(Registro r, int RRN) {
+    private void cargarRegistro(int RRN) {
+
+        if (RRN > archivoEnUso.getNoRegistros() - 1) {
+            return;
+        }
+
+        int offsetInicial = archivoEnUso.tamanioMetadata();
+        int longitudRegistro = archivoEnUso.longitudRegistro();
+
+        try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw")) {
+            raf.seek(offsetInicial + (RRN * longitudRegistro));
+
+            Registro r = new Registro(archivoEnUso.getCamposDelArchivo().size());
+
+            for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
+                String nomCampo = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
+
+                if (nomCampo.endsWith("_int")) {
+                    int val = raf.readInt();
+                    CampoEntero campo = new CampoEntero();
+                    campo.setValor(val);
+                    r.añadirCampo(campo);
+                } else if (nomCampo.endsWith("_dec")) {
+                    double val = raf.readDouble();
+                    CampoDecimal campo = new CampoDecimal();
+                    campo.setValor(val);
+                    r.añadirCampo(campo);
+                } else if (nomCampo.endsWith("_str")) {
+                    String val = raf.readUTF();
+                    CampoTexto campo = new CampoTexto();
+                    campo.setLongitud(((CampoTexto)archivoEnUso.getCamposDelArchivo().get(i)).getLongitud());
+                    campo.setTexto(val);
+                    r.añadirCampo(campo);
+                } else {
+                    char val = raf.readChar();
+                    CampoCaracter campo = new CampoCaracter(val);
+                    r.añadirCampo(campo);
+                }
+
+            }
+            
+            registroCargado = r;
+            
+            mostrarRegistro(r);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void mostrarRegistro(Registro r) {
         
+        DefaultTableModel mod = (DefaultTableModel) jt_busqueda.getModel();
+        
+        for (int i = 0; i < r.getCampos().size(); i++) {
+            
+            Campo c = r.getCampos().get(i);
+            String nomCampo = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
+            String value;
+            
+            if (nomCampo.endsWith("_int")) {
+                int v = ((CampoEntero)c).getValor();
+                value = String.valueOf(v);
+            } else if (nomCampo.endsWith("_dec")) {
+                double v = ((CampoDecimal)c).getValor();
+                value = String.valueOf(v);
+            } else if (nomCampo.endsWith("_car")) {
+                char v = ((CampoCaracter)c).getValor();
+                value = String.valueOf(v);
+            } else {
+                value = ((CampoTexto)c).getTexto();
+            }
+            
+            mod.setValueAt(value, i, 1);
+            
+        }
+        
+    }
+
+    private void escribirRegistro(Registro r, int RRN) {
+
         int offsetInicial = archivoEnUso.tamanioMetadata();
         int longitudRegistro = archivoEnUso.longitudRegistro();
 //        int numRegistros = archivoEnUso.getNoRegistros();
@@ -1262,50 +1589,50 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         System.out.println(longitudRegistro);
 //        System.out.println(numRegistros);
 //        System.out.println(offsetInicial + (numRegistros * longitudRegistro));
-        
+
         try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw")) {
-            
+
             raf.seek(offsetInicial + (RRN * longitudRegistro));
-            
+
             for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
                 Campo c = r.getCampos().get(i);
 
                 if (c instanceof CampoEntero) {
-                    CampoEntero campo = (CampoEntero)c;
+                    CampoEntero campo = (CampoEntero) c;
                     raf.writeInt(campo.getValor());
                 } else if (c instanceof CampoDecimal) {
-                    CampoDecimal campo = (CampoDecimal)c;
+                    CampoDecimal campo = (CampoDecimal) c;
                     raf.writeDouble(campo.getValor());
                 } else if (c instanceof CampoCaracter) {
-                    CampoCaracter campo = (CampoCaracter)c;
+                    CampoCaracter campo = (CampoCaracter) c;
                     raf.writeChar(campo.getValor());
                 } else {
-                    CampoTexto campo = (CampoTexto)c;
+                    CampoTexto campo = (CampoTexto) c;
                     raf.writeUTF(campo.getTexto());
                 }
 
             }
-            
+
             raf.writeChar('\n');
-            
+
             if (archivoEnUso.getNoRegistros() == 0) {
                 jButton_agregar.setEnabled(false);
                 jButton_modificar.setEnabled(false);
                 jButton_eliminar.setEnabled(false);
             }
-            
+
             //Incrementamos la cantidad de registros en el archivo
             raf.seek(4);
             int numReg = raf.readInt();
             raf.seek(4);
             raf.writeInt(numReg + 1);
-            
+
             //Incrementamos la cantidad de registros en el archivoEnUso
             archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros() + 1);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
     }
 
     public void InsertMetadataInNewFile(File archivo) {
@@ -1411,7 +1738,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             if (archivoEnUso.getLlavePrincipal() != -1) {
                 tieneLlavePrincipal = true;
             }
-            
+
             if (archivoEnUso.getNoRegistros() == 0) {
                 jButton_agregar.setEnabled(false);
                 jButton_modificar.setEnabled(false);
@@ -1421,7 +1748,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_modificar.setEnabled(true);
                 jButton_eliminar.setEnabled(true);
             }
-            
+
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
         }
@@ -1442,14 +1769,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
 
     }
-    private LinkedList AvailList = new LinkedList();
     private File archivoCargado;
     private File archivoIndices;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
     private boolean tieneLlavePrincipal = false;
     private ArchivoDeRegitstro archivoEnUso;
-    private ArrayList<Registro> registrosEnMemoria;
     private boolean nuevo = false;
+    private Registro registroCargado;
 
 }
 //try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {

@@ -24,7 +24,7 @@ public class BTree<K extends Comparable, V> implements Serializable {
      * @param <K> The key type.
      * @param <V> The value type.
      */
-    public class Entry<K extends Comparable, V> implements Serializable{
+    public static class Entry<K extends Comparable, V> implements Serializable{
 
         private static final long serialVersionUID = 777L;
         
@@ -67,7 +67,7 @@ public class BTree<K extends Comparable, V> implements Serializable {
      * @param <K> The key type.
      * @param <V> The value type.
      */
-    public class Node<K extends Comparable, V> implements Serializable{
+    public static class Node<K extends Comparable, V> implements Serializable{
         
         private static final long serialVersionUID = 777L;
 
