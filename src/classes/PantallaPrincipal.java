@@ -111,9 +111,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jtf_nuevo = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        jb_modificarRegistroAceptar = new javax.swing.JButton();
         jl_mod_BG = new javax.swing.JLabel();
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jd_modificarCampo = new javax.swing.JDialog();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        jtf_actualCampo = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jtf_nuevoCampo = new javax.swing.JTextField();
+        jb_modificarCampoAceptar = new javax.swing.JButton();
+        jl_mod_BG1 = new javax.swing.JLabel();
         jPanel_BackGround = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable_Display = new javax.swing.JTable();
@@ -313,7 +322,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jt_campos.setCellSelectionEnabled(false);
         jScrollPane4.setViewportView(jt_campos);
 
         jd_nuevoRegistro.getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 590, 290));
@@ -440,19 +448,54 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, -1, -1));
         jPanel1.add(jtf_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 170, 30));
 
-        jButton1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jButton1.setText("Aceptar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jb_modificarRegistroAceptar.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jb_modificarRegistroAceptar.setText("Aceptar");
+        jb_modificarRegistroAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jb_modificarRegistroAceptarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 130, -1));
+        jPanel1.add(jb_modificarRegistroAceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 130, -1));
 
         jl_mod_BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado 2.png"))); // NOI18N
         jPanel1.add(jl_mod_BG, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 300));
 
         jd_modificarRegistro.getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 300));
+
+        jd_modificarCampo.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel14.setFont(new java.awt.Font("BankGothic Lt BT", 0, 18)); // NOI18N
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("Modificar Campo");
+        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 190, 40));
+
+        jtf_actualCampo.setEditable(false);
+        jPanel2.add(jtf_actualCampo, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 170, 30));
+
+        jLabel12.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel12.setText("Nombre Actual: ");
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 90, -1, -1));
+
+        jLabel13.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel13.setText("Nuevo Nombre:");
+        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, -1, -1));
+        jPanel2.add(jtf_nuevoCampo, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 170, 30));
+
+        jb_modificarCampoAceptar.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jb_modificarCampoAceptar.setText("Aceptar");
+        jb_modificarCampoAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_modificarCampoAceptarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jb_modificarCampoAceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 130, -1));
+
+        jl_mod_BG1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado 2.png"))); // NOI18N
+        jPanel2.add(jl_mod_BG1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 300));
+
+        jd_modificarCampo.getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 300));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon("./src/recursos/x.png").getImage());
@@ -728,8 +771,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_openFileActionPerformed
 
     private void saveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileActionPerformed
-        if(!verifyOpen()) return;
-        
+        if (!verifyOpen()) {
+            return;
+        }
+
         try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw")) {
             if (!verifyOpen()) {
                 return;
@@ -854,82 +899,20 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             // No hay nada seleccionado
             if (selection == -1) {
+                JOptionPane.showMessageDialog(listCamposPantalla, "Debe seleccionar un campo.");
                 return;
             }
 
-            String modificacion = JOptionPane.showInputDialog(jList_campos, "Ingrese el "
-                    + " nuevo nombre del campo:", mod.get(selection));
+            jtf_actualCampo.setText((String)mod.getElementAt(selection));
+            jtf_nuevoCampo.setText("");
+            
+            jd_modificarCampo.pack();
+            jd_modificarCampo.setLocationRelativeTo(this);
+            jd_modificarCampo.setModal(true);
+            jd_modificarCampo.setVisible(true);
 
-            if (modificacion == null || modificacion.strip().equals("")) {
-                return;
-            }
-
-            modificacion = modificacion.strip().toUpperCase();
-
-            if (modificacion.equals(mod.getElementAt(selection))) {
-                JOptionPane.showMessageDialog(listCamposPantalla, "El nuevo campo es igual al antiguo.",
-                        "Campos iguales.", JOptionPane.INFORMATION_MESSAGE);
-                int opc = JOptionPane.showConfirmDialog(this, "¿Desea hacer este campo su llave principal?");
-                if (opc == JOptionPane.YES_OPTION) {
-                    jLabelPrincipal.setText("Llave principal: " + modificacion);
-                    for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
-                        if (modificacion.equalsIgnoreCase(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo())) {
-                            archivoEnUso.setLlavePrincipal(i);
-                            saved = false;
-                            break;
-                        }
-                    }
-                }
-            } else {
-                for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
-                    if (modificacion.equalsIgnoreCase(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo())) {
-                        JOptionPane.showMessageDialog(listCamposPantalla, "El campo ingresado ya existe.", "No se"
-                                + " puede modificar el campo", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                }
-                // Cambiamos el campo en el arreglo, que tiene 
-                // los campos en el mismo orden que la lista
-                Campo temp = null;
-                if (archivoEnUso.getCamposDelArchivo().get(selection) instanceof CampoEntero) {
-                    temp = new CampoEntero(modificacion);
-                    Integer aux = ((CampoEntero) archivoEnUso.getCamposDelArchivo().get(selection)).getValor();
-                    ((CampoEntero) temp).setValor(aux);
-                } else if (archivoEnUso.getCamposDelArchivo().get(selection) instanceof CampoDecimal) {
-                    temp = new CampoDecimal(modificacion);
-                    Double aux = ((CampoDecimal) archivoEnUso.getCamposDelArchivo().get(selection)).getValor();
-                    ((CampoDecimal) temp).setValor(aux);
-                } else if (archivoEnUso.getCamposDelArchivo().get(selection) instanceof CampoTexto) {
-                    temp = new CampoTexto(modificacion);
-                    String aux = ((CampoTexto) archivoEnUso.getCamposDelArchivo().get(selection)).getTexto();
-                    ((CampoTexto) temp).setTexto(aux);
-                } else if (archivoEnUso.getCamposDelArchivo().get(selection) instanceof CampoCaracter) {
-                    temp = new CampoCaracter(modificacion);
-                    Character aux = ((CampoCaracter) archivoEnUso.getCamposDelArchivo().get(selection)).getValor();
-                    ((CampoCaracter) temp).setValor(aux);
-                }
-                archivoEnUso.getCamposDelArchivo().set(selection, temp);
-                // Cambiamos el campo en la lista
-                mod.set(selection, modificacion);
-
-                jList_campos.setModel(mod);
-
-                JOptionPane.showMessageDialog(listCamposPantalla, "Campo modificado con exito",
-                        "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
-
-                // Modificamos el campo en la tabla.
-                DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
-                String dataAux[] = new String[archivoEnUso.getCamposDelArchivo().size()];
-                for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
-                    dataAux[i] = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
-                }
-                model.setColumnIdentifiers(dataAux);
-                saved = false;
-                return;
-            }
-
-        } catch (Exception E) {
-            E.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_jButton_modificarActionPerformed
 
@@ -1492,7 +1475,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             //Decrementar el número de registros
             int numReg = raf.readInt();
             raf.seek(4);
-            raf.writeInt(numReg - 1);
+            raf.writeInt(--numReg);
+
+            if (numReg == 0) {
+                jButton_agregar.setEnabled(true);
+                jButton_modificar.setEnabled(true);
+                jButton_eliminar.setEnabled(true);
+            }
 
             //Decrementar en el archivo de registros
             archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros() - 1);
@@ -1541,17 +1530,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jt_busquedaMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jb_modificarRegistroAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_modificarRegistroAceptarActionPerformed
 
         int row = jt_busqueda.getSelectedRow();
-        
+
         String actual = jtf_actual.getText().strip();
         String nuevoValor = jtf_nuevo.getText().strip();
 
         if (actual.equals(nuevoValor) || nuevoValor.isEmpty()) {
             return;
         }
-        
+
         Campo old = registroCargado.getCampos().get(row);
         Campo c;
         String nomCampo = archivoEnUso.getCamposDelArchivo().get(row).getNombreCampo();
@@ -1567,48 +1556,138 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 c = new CampoCaracter(nuevoValor.charAt(0));
             } else {
                 c = new CampoTexto();
-                ((CampoTexto) c).setLongitud(((CampoTexto)archivoEnUso.getCamposDelArchivo().get(row)).getLongitud());
+                ((CampoTexto) c).setLongitud(((CampoTexto) archivoEnUso.getCamposDelArchivo().get(row)).getLongitud());
                 ((CampoTexto) c).setTexto(nuevoValor);
             }
-            
+
             System.out.println("Antes de modificar:");
             System.out.println(archivoEnUso.getArbolIndices().toString());
             if (row == archivoEnUso.getLlavePrincipal()) {
                 if (!archivoEnUso.getArbolIndices().insert(c, RRNCargado)) {
-                    
-                    JOptionPane.showMessageDialog(jd_modificarRegistro, "Ya existe un registro con esta llave principal.", 
-                    "Error.", JOptionPane.ERROR_MESSAGE);
-                    
-                    
+
+                    JOptionPane.showMessageDialog(jd_modificarRegistro, "Ya existe un registro con esta llave principal.",
+                            "Error.", JOptionPane.ERROR_MESSAGE);
+
                     return;
                 } else {
-                    if(archivoEnUso.getArbolIndices().remove(old)) {
+                    if (archivoEnUso.getArbolIndices().remove(old)) {
                         System.out.println("Removido la llave principal del arbol.");
                         System.out.println(archivoEnUso.getArbolIndices().toString());
                     }
                     archivoEnUso.updateTree(archivoIndices);
                 }
             }
-            
+
             registroCargado.getCampos().set(row, c);
-            
+
             escribirRegistro(registroCargado, RRNCargado);
-            
-            JOptionPane.showMessageDialog(jd_modificarRegistro, "Registro modificado con éxito.", 
+
+            JOptionPane.showMessageDialog(jd_modificarRegistro, "Registro modificado con éxito.",
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            
-            jt_busqueda.setValueAt(registroCargado.getCampos().get(row), 
+
+            jt_busqueda.setValueAt(registroCargado.getCampos().get(row),
                     row, 1);
-            
+
             jd_modificarRegistro.setVisible(false);
-            
+
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            JOptionPane.showMessageDialog(jd_modificarRegistro, "El nuevo valor no es válido.", 
+            JOptionPane.showMessageDialog(jd_modificarRegistro, "El nuevo valor no es válido.",
                     "Error.", JOptionPane.ERROR_MESSAGE);
         }
 
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jb_modificarRegistroAceptarActionPerformed
+
+    private void jb_modificarCampoAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_modificarCampoAceptarActionPerformed
+        try {
+            
+            int seleccion = jList_campos.getSelectedIndex();
+            
+            DefaultListModel mod = (DefaultListModel) jList_campos.getModel();
+
+            String viejo = jtf_actualCampo.getText();
+            String nuevoNombre = jtf_nuevoCampo.getText();
+            
+            if (nuevoNombre == null || nuevoNombre.equals(viejo)) {
+                return;
+            }
+            
+            nuevoNombre = nuevoNombre.strip();
+            
+            if (nuevoNombre.equals("")) {
+                return;
+            } else if (nuevoNombre.length() > 25) {
+                JOptionPane.showMessageDialog(jd_modificarCampo, "El nuevo nombre del campo no debe "
+                        + "sobrepasar los 25 caracteres.", "Nombre demasiado largo.", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            nuevoNombre = nuevoNombre.toUpperCase();
+
+//                int opc = JOptionPane.showConfirmDialog(this, "¿Desea hacer este campo su llave principal?");
+//                if (opc == JOptionPane.YES_OPTION) {
+//                    jLabelPrincipal.setText("Llave principal: " + modificacion);
+//                    for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
+//                        if (modificacion.equalsIgnoreCase(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo())) {
+//                            archivoEnUso.setLlavePrincipal(i);
+//                            saved = false;
+//                            break;
+//                        }
+//                    }
+//                }
+
+                int largo = nuevoNombre.length();
+                while (nuevoNombre.length() < 25) {
+                    nuevoNombre += " ";
+                }
+                
+                
+                for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
+                    if (nuevoNombre.equalsIgnoreCase(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25))) {
+                        JOptionPane.showMessageDialog(listCamposPantalla, "El campo ingresado ya existe.", "No se"
+                                + " puede modificar el campo", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                
+                //Cambiamos el campo en la JList
+                mod.setElementAt(nuevoNombre, seleccion);
+                jList_campos.setModel(mod);
+                
+                //Obtenemos el campo del ArchivoDeRegistro
+                Campo campo = archivoEnUso.getCamposDelArchivo().get(seleccion);
+                String nombreViejo = campo.getNombreCampo();
+                
+                if (nombreViejo.endsWith("int")) {
+                    nuevoNombre += "_int";
+                } else if (nombreViejo.endsWith("dec")) {
+                    nuevoNombre += "_dec";
+                } else if (nombreViejo.endsWith("car")) {
+                    nuevoNombre += "_car";
+                } else {
+                    nuevoNombre += "_str";
+                }
+                
+                //Cambiamos el campo en el ArchivoDeRegistro
+                campo.setNombreCampo(nuevoNombre);
+                
+                JOptionPane.showMessageDialog(listCamposPantalla, "Campo modificado con exito",
+                        "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
+
+                // Modificamos el campo en la tabla.
+                DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
+                String dataAux[] = new String[archivoEnUso.getCamposDelArchivo().size()];
+                for (int i = 0; i < dataAux.length; i++) {
+                    if (i == seleccion)
+                        dataAux[i] = nuevoNombre.substring(0, largo);
+                    else
+                        dataAux[i] = model.getColumnName(i);
+                }
+                saved = false;
+
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_jb_modificarCampoAceptarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1664,13 +1743,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem exportExcel;
     private javax.swing.JMenuItem exportXML;
     private javax.swing.JMenuItem introRegistros;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton_agregar;
     private javax.swing.JButton jButton_eliminar;
     private javax.swing.JButton jButton_modificar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1688,6 +1769,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JList<String> jList_campos;
     private javax.swing.JMenuItem jMenuItem_listarCampos;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel_BackGround;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1698,17 +1780,23 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jb_clearCargado;
     private javax.swing.JButton jb_crearRegistro;
     private javax.swing.JButton jb_eliminarRegistro;
+    private javax.swing.JButton jb_modificarCampoAceptar;
     private javax.swing.JButton jb_modificarRegistro;
+    private javax.swing.JButton jb_modificarRegistroAceptar;
     private javax.swing.JDialog jd_buscarRegistro;
+    private javax.swing.JDialog jd_modificarCampo;
     private javax.swing.JDialog jd_modificarRegistro;
     private javax.swing.JDialog jd_nuevoRegistro;
     private javax.swing.JLabel jl_mod_BG;
+    private javax.swing.JLabel jl_mod_BG1;
     private javax.swing.JSpinner js_tamanioCadena;
     private javax.swing.JTable jt_busqueda;
     private javax.swing.JTable jt_campos;
     private javax.swing.JTextField jtf_actual;
+    private javax.swing.JTextField jtf_actualCampo;
     private javax.swing.JTextField jtf_buscar;
     private javax.swing.JTextField jtf_nuevo;
+    private javax.swing.JTextField jtf_nuevoCampo;
     private javax.swing.JLabel labelFondo;
     private javax.swing.JDialog listCamposPantalla;
     private javax.swing.JMenuItem listRegistros;
@@ -1851,7 +1939,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             raf.writeChar('\n');
 
-            if (archivoEnUso.getNoRegistros() == 0) {
+            if (archivoEnUso.getNoRegistros() != 0) {
                 jButton_agregar.setEnabled(false);
                 jButton_modificar.setEnabled(false);
                 jButton_eliminar.setEnabled(false);
@@ -1923,7 +2011,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     + "realizar esa operación.", "No hay un archivo abierto",
                     JOptionPane.ERROR_MESSAGE);
             return false;
-        } 
+        }
         return true;
     }
 
@@ -1934,6 +2022,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         archivoCargado = file;
         archivoIndices = fileIndices;
         archivoEnUso = new ArchivoDeRegitstro(archivoCargado, archivoIndices);
+
         jLabel_current.setText("Current file: " + archivoCargado.getName());
         jTable_Display.setModel(new DefaultTableModel(0, 0));
         DefaultListModel list_model = new DefaultListModel();
@@ -1981,13 +2070,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
 
             if (archivoEnUso.getNoRegistros() == 0) {
-                jButton_agregar.setEnabled(false);
-                jButton_modificar.setEnabled(false);
-                jButton_eliminar.setEnabled(false);
-            } else {
                 jButton_agregar.setEnabled(true);
                 jButton_modificar.setEnabled(true);
                 jButton_eliminar.setEnabled(true);
+            } else {
+                jButton_agregar.setEnabled(false);
+                jButton_modificar.setEnabled(false);
+                jButton_eliminar.setEnabled(false);
             }
 
         } catch (FileNotFoundException e) {
