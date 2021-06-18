@@ -105,6 +105,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jd_modificarRegistro = new javax.swing.JDialog();
+        jPanel1 = new javax.swing.JPanel();
+        jtf_actual = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jtf_nuevo = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jl_mod_BG = new javax.swing.JLabel();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel_BackGround = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable_Display = new javax.swing.JTable();
@@ -123,9 +132,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jMenuItem_listarCampos = new javax.swing.JMenuItem();
         Registros = new javax.swing.JMenu();
         introRegistros = new javax.swing.JMenuItem();
-        modRegistros = new javax.swing.JMenuItem();
         searchRegistros = new javax.swing.JMenuItem();
-        deleteRegistros = new javax.swing.JMenuItem();
         listRegistros = new javax.swing.JMenuItem();
         Indices = new javax.swing.JMenu();
         newIndex = new javax.swing.JMenuItem();
@@ -306,7 +313,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jt_campos.setColumnSelectionAllowed(true);
+        jt_campos.setCellSelectionEnabled(false);
         jScrollPane4.setViewportView(jt_campos);
 
         jd_nuevoRegistro.getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 590, 290));
@@ -353,6 +360,16 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         });
         jt_busqueda.setColumnSelectionAllowed(true);
+        jt_busqueda.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jt_busquedaFocusGained(evt);
+            }
+        });
+        jt_busqueda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_busquedaMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(jt_busqueda);
 
         jd_buscarRegistro.getContentPane().add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, 590, 270));
@@ -407,6 +424,36 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jLabel9.setText("Buscar Registro");
         jd_buscarRegistro.getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 370, -1));
 
+        jd_modificarRegistro.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jtf_actual.setEditable(false);
+        jPanel1.add(jtf_actual, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 50, 170, 30));
+
+        jLabel10.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel10.setText("Valor Actual: ");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, -1, -1));
+
+        jLabel11.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel11.setText("Nuevo Valor");
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, -1, -1));
+        jPanel1.add(jtf_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 170, 30));
+
+        jButton1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jButton1.setText("Aceptar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 130, -1));
+
+        jl_mod_BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado 2.png"))); // NOI18N
+        jPanel1.add(jl_mod_BG, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 300));
+
+        jd_modificarRegistro.getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 300));
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon("./src/recursos/x.png").getImage());
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -415,10 +462,29 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jTable_Display.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-
+                "Title 1", "Title 2", "Title 3"
             }
         ));
         jTable_Display.setGridColor(new java.awt.Color(153, 0, 204));
@@ -431,7 +497,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable_Display);
 
-        jPanel_BackGround.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 950, 330));
+        jPanel_BackGround.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 950, 350));
 
         jLabelPrincipal.setForeground(new java.awt.Color(255, 255, 255));
         jLabelPrincipal.setText("Llave Principal: ");
@@ -525,9 +591,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
         Registros.add(introRegistros);
 
-        modRegistros.setText("Modificar Registros");
-        Registros.add(modRegistros);
-
         searchRegistros.setText("Buscar Registros");
         searchRegistros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -535,9 +598,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         });
         Registros.add(searchRegistros);
-
-        deleteRegistros.setText("Borrar Registros");
-        Registros.add(deleteRegistros);
 
         listRegistros.setText("Listar Registros");
         Registros.add(listRegistros);
@@ -668,6 +728,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_openFileActionPerformed
 
     private void saveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileActionPerformed
+        if(!verifyOpen()) return;
+        
         try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw")) {
             if (!verifyOpen()) {
                 return;
@@ -1201,7 +1263,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(jd_nuevoRegistro, "Registro insertado con éxito.",
                 "EXITO", JOptionPane.INFORMATION_MESSAGE);
         jd_nuevoRegistro.setVisible(false);
-        
+
         System.out.println(archivoEnUso.getArbolIndices().toString());
 
     }//GEN-LAST:event_jb_crearRegistroActionPerformed
@@ -1386,7 +1448,23 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jb_clearCargadoActionPerformed
 
     private void jb_modificarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_modificarRegistroActionPerformed
-        // TODO add your handling code here:
+
+        int row = jt_busqueda.getSelectedRow();
+
+        if (row == -1) {
+            return;
+        }
+
+        String valor = (String) jt_busqueda.getModel().getValueAt(row, 1);
+
+        jtf_actual.setText(valor);
+        jtf_nuevo.setText("");
+
+        jd_modificarRegistro.pack();
+        jd_modificarRegistro.setModal(true);
+        jd_modificarRegistro.setLocationRelativeTo(jd_buscarRegistro);
+        jd_modificarRegistro.setVisible(true);
+
     }//GEN-LAST:event_jb_modificarRegistroActionPerformed
 
     private void jb_eliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_eliminarRegistroActionPerformed
@@ -1402,7 +1480,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             int cabeza = raf.readInt();
 
             System.out.println("RRN Cargado: " + RRNCargado);
-            
+
             raf.seek(archivoEnUso.tamanioMetadata() + (RRNCargado * archivoEnUso.longitudRegistro()));
             raf.writeChar('*');
 
@@ -1410,14 +1488,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             raf.seek(0);
             raf.writeInt(RRNCargado);
-            
+
             //Decrementar el número de registros
             int numReg = raf.readInt();
             raf.seek(4);
             raf.writeInt(numReg - 1);
-            
+
             //Decrementar en el archivo de registros
-            archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros()-1);
+            archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros() - 1);
 
             //Insertar en el AvailList
             archivoEnUso.getAvailList().insertarAlFrente(RRNCargado);
@@ -1438,10 +1516,99 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(jd_buscarRegistro, "Ocurrió un error al eliminar el registro.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         System.out.println(archivoEnUso.getArbolIndices().toString());
 
     }//GEN-LAST:event_jb_eliminarRegistroActionPerformed
+
+    private void jt_busquedaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jt_busquedaFocusGained
+        int selec = jt_busqueda.getSelectedRow();
+
+        if (selec == -1) {
+            return;
+        }
+
+        jb_modificarRegistro.setEnabled(true);
+    }//GEN-LAST:event_jt_busquedaFocusGained
+
+    private void jt_busquedaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_busquedaMouseClicked
+        int x = evt.getX();
+        int y = evt.getY();
+
+//        jt_busqueda.
+        DefaultTableModel m = (DefaultTableModel) jt_busqueda.getModel();
+
+
+    }//GEN-LAST:event_jt_busquedaMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        int row = jt_busqueda.getSelectedRow();
+        
+        String actual = jtf_actual.getText().strip();
+        String nuevoValor = jtf_nuevo.getText().strip();
+
+        if (actual.equals(nuevoValor) || nuevoValor.isEmpty()) {
+            return;
+        }
+        
+        Campo old = registroCargado.getCampos().get(row);
+        Campo c;
+        String nomCampo = archivoEnUso.getCamposDelArchivo().get(row).getNombreCampo();
+
+        try {
+            if (nomCampo.endsWith("int")) {
+                c = new CampoEntero();
+                ((CampoEntero) c).setValor(Integer.parseInt(nuevoValor));
+            } else if (nomCampo.endsWith("dec")) {
+                c = new CampoDecimal();
+                ((CampoDecimal) c).setValor(Double.parseDouble(nuevoValor));
+            } else if (nomCampo.endsWith("car")) {
+                c = new CampoCaracter(nuevoValor.charAt(0));
+            } else {
+                c = new CampoTexto();
+                ((CampoTexto) c).setLongitud(((CampoTexto)archivoEnUso.getCamposDelArchivo().get(row)).getLongitud());
+                ((CampoTexto) c).setTexto(nuevoValor);
+            }
+            
+            System.out.println("Antes de modificar:");
+            System.out.println(archivoEnUso.getArbolIndices().toString());
+            if (row == archivoEnUso.getLlavePrincipal()) {
+                if (!archivoEnUso.getArbolIndices().insert(c, RRNCargado)) {
+                    
+                    JOptionPane.showMessageDialog(jd_modificarRegistro, "Ya existe un registro con esta llave principal.", 
+                    "Error.", JOptionPane.ERROR_MESSAGE);
+                    
+                    
+                    return;
+                } else {
+                    if(archivoEnUso.getArbolIndices().remove(old)) {
+                        System.out.println("Removido la llave principal del arbol.");
+                        System.out.println(archivoEnUso.getArbolIndices().toString());
+                    }
+                    archivoEnUso.updateTree(archivoIndices);
+                }
+            }
+            
+            registroCargado.getCampos().set(row, c);
+            
+            escribirRegistro(registroCargado, RRNCargado);
+            
+            JOptionPane.showMessageDialog(jd_modificarRegistro, "Registro modificado con éxito.", 
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            
+            jt_busqueda.setValueAt(registroCargado.getCampos().get(row), 
+                    row, 1);
+            
+            jd_modificarRegistro.setVisible(false);
+            
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(jd_modificarRegistro, "El nuevo valor no es válido.", 
+                    "Error.", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1492,15 +1659,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar MenuPrincipal;
     private javax.swing.JMenu Registros;
     private javax.swing.JMenuItem SalvarCambiosTemporalmente;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JMenuItem closeFile;
-    private javax.swing.JMenuItem deleteRegistros;
     private javax.swing.JMenuItem exportExcel;
     private javax.swing.JMenuItem exportXML;
     private javax.swing.JMenuItem introRegistros;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton_agregar;
     private javax.swing.JButton jButton_eliminar;
     private javax.swing.JButton jButton_modificar;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1517,6 +1687,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel_current;
     private javax.swing.JList<String> jList_campos;
     private javax.swing.JMenuItem jMenuItem_listarCampos;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel_BackGround;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1529,16 +1700,19 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jb_eliminarRegistro;
     private javax.swing.JButton jb_modificarRegistro;
     private javax.swing.JDialog jd_buscarRegistro;
+    private javax.swing.JDialog jd_modificarRegistro;
     private javax.swing.JDialog jd_nuevoRegistro;
+    private javax.swing.JLabel jl_mod_BG;
     private javax.swing.JSpinner js_tamanioCadena;
     private javax.swing.JTable jt_busqueda;
     private javax.swing.JTable jt_campos;
+    private javax.swing.JTextField jtf_actual;
     private javax.swing.JTextField jtf_buscar;
+    private javax.swing.JTextField jtf_nuevo;
     private javax.swing.JLabel labelFondo;
     private javax.swing.JDialog listCamposPantalla;
     private javax.swing.JMenuItem listRegistros;
     private javax.swing.JPopupMenu menuRegistros;
-    private javax.swing.JMenuItem modRegistros;
     private javax.swing.JMenuItem newFile;
     private javax.swing.JMenuItem newIndex;
     private javax.swing.JMenuItem openFile;
@@ -1749,9 +1923,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     + "realizar esa operación.", "No hay un archivo abierto",
                     JOptionPane.ERROR_MESSAGE);
             return false;
-        } else {
-            return true;
-        }
+        } 
+        return true;
     }
 
     private void loadFile(File file, File fileIndices) {
