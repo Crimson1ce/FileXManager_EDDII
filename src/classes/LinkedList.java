@@ -210,7 +210,7 @@ public class LinkedList<T> {
      *
      * @param elem El elemento a insertar.
      */
-    void insertarAlFinal(T elem) {
+    public void insertarAlFinal(T elem) {
         Nodo n = new Nodo(elem);
         Nodo last = this.cola.getAnterior();
         last.setSiguiente(n);
@@ -225,7 +225,7 @@ public class LinkedList<T> {
      *
      * @param elem El elemento a insertar.
      */
-    void insertarAlFrente(T elem) {
+    public void insertarAlFrente(T elem) {
         Nodo n = new Nodo(elem);
         Nodo first = this.cabeza.getSiguiente();
         first.setAnterior(n);

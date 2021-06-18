@@ -46,7 +46,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     public PantallaPrincipal() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
+
     }
 
     /**
@@ -1093,7 +1093,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         int lp = archivoEnUso.getLlavePrincipal();
 
         //Validar al implementar availlist
-        int RRN = archivoEnUso.getNoRegistros();
+        int RRN;
+
+        if (archivoEnUso.getAvailList().vacia()) {
+            RRN = archivoEnUso.getNoRegistros();
+        } else {
+            RRN = archivoEnUso.getAvailList().obtener(0);
+        }
 
         for (int i = 0; i < mod.getRowCount(); i++) {
             String value = (String) (mod.getValueAt(i, 1) == null ? "" : mod.getValueAt(i, 1));
@@ -1186,17 +1192,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     return;
                 }
                 archivoIndices = archivoEnUso.updateTree(archivoIndices);
-                
-                JOptionPane.showMessageDialog(jd_nuevoRegistro, "Registro insertado con éxito.", 
-                        "EXITO", JOptionPane.INFORMATION_MESSAGE);
-                
                 return;
             }
         }
 
         archivoIndices = archivoEnUso.updateTree(archivoIndices);
         escribirRegistro(r, RRN);
+        JOptionPane.showMessageDialog(jd_nuevoRegistro, "Registro insertado con éxito.",
+                "EXITO", JOptionPane.INFORMATION_MESSAGE);
         jd_nuevoRegistro.setVisible(false);
+        
+        System.out.println(archivoEnUso.getArbolIndices().toString());
 
     }//GEN-LAST:event_jb_crearRegistroActionPerformed
 
@@ -1277,7 +1283,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         mod.setDataVector(dataVector, columIden);
 
         jt_busqueda.setModel(mod);
-        
+
         jb_eliminarRegistro.setEnabled(false);
         jb_modificarRegistro.setEnabled(false);
 
@@ -1342,9 +1348,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             int RRN = entry.getValue();
 
             cargarRegistro(RRN);
-            
+
             jb_eliminarRegistro.setEnabled(true);
-            
+
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
@@ -1369,12 +1375,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         mod.setDataVector(dataVector, columIden);
 
         jt_busqueda.setModel(mod);
-        
+
         jb_eliminarRegistro.setEnabled(false);
         jb_modificarRegistro.setEnabled(false);
-        
+        jtf_buscar.setText("");
+
         registroCargado = null;
-        
+        RRNCargado = -1;
+
     }//GEN-LAST:event_jb_clearCargadoActionPerformed
 
     private void jb_modificarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_modificarRegistroActionPerformed
@@ -1382,7 +1390,57 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jb_modificarRegistroActionPerformed
 
     private void jb_eliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_eliminarRegistroActionPerformed
-        // TODO add your handling code here:
+        if (RRNCargado == -1 || registroCargado == null) {
+            System.out.println("Error.fdsa");
+            return;
+        }
+
+        try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw")) {
+
+            //Cambios en el archivo
+            raf.seek(0);
+            int cabeza = raf.readInt();
+
+            System.out.println("RRN Cargado: " + RRNCargado);
+            
+            raf.seek(archivoEnUso.tamanioMetadata() + (RRNCargado * archivoEnUso.longitudRegistro()));
+            raf.writeChar('*');
+
+            raf.writeInt(cabeza);
+
+            raf.seek(0);
+            raf.writeInt(RRNCargado);
+            
+            //Decrementar el número de registros
+            int numReg = raf.readInt();
+            raf.seek(4);
+            raf.writeInt(numReg - 1);
+            
+            //Decrementar en el archivo de registros
+            archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros()-1);
+
+            //Insertar en el AvailList
+            archivoEnUso.getAvailList().insertarAlFrente(RRNCargado);
+
+            //Eliminar del arbol
+            Campo campo = registroCargado.getCampos().get(archivoEnUso.getLlavePrincipal());
+            if (archivoEnUso.getArbolIndices().remove(campo)) {
+                JOptionPane.showMessageDialog(jd_buscarRegistro, "El registro ha sido eliminado con éxito.",
+                        "Registro eliminado", JOptionPane.INFORMATION_MESSAGE);
+                archivoEnUso.updateTree(archivoIndices);
+                jb_clearCargadoActionPerformed(evt);
+            } else {
+                JOptionPane.showMessageDialog(jd_buscarRegistro, "Ocurrió un error al eliminar el registro del árbol.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(jd_buscarRegistro, "Ocurrió un error al eliminar el registro.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        System.out.println(archivoEnUso.getArbolIndices().toString());
+
     }//GEN-LAST:event_jb_eliminarRegistroActionPerformed
 
     /**
@@ -1512,6 +1570,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             Registro r = new Registro(archivoEnUso.getCamposDelArchivo().size());
 
+            raf.readChar();
+
             for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
                 String nomCampo = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
 
@@ -1528,7 +1588,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 } else if (nomCampo.endsWith("_str")) {
                     String val = raf.readUTF();
                     CampoTexto campo = new CampoTexto();
-                    campo.setLongitud(((CampoTexto)archivoEnUso.getCamposDelArchivo().get(i)).getLongitud());
+                    campo.setLongitud(((CampoTexto) archivoEnUso.getCamposDelArchivo().get(i)).getLongitud());
                     campo.setTexto(val);
                     r.añadirCampo(campo);
                 } else {
@@ -1538,9 +1598,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 }
 
             }
-            
+
             registroCargado = r;
-            
+            RRNCargado = RRN;
+
             mostrarRegistro(r);
 
         } catch (FileNotFoundException e) {
@@ -1549,34 +1610,34 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void mostrarRegistro(Registro r) {
-        
+
         DefaultTableModel mod = (DefaultTableModel) jt_busqueda.getModel();
-        
+
         for (int i = 0; i < r.getCampos().size(); i++) {
-            
+
             Campo c = r.getCampos().get(i);
             String nomCampo = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
             String value;
-            
+
             if (nomCampo.endsWith("_int")) {
-                int v = ((CampoEntero)c).getValor();
+                int v = ((CampoEntero) c).getValor();
                 value = String.valueOf(v);
             } else if (nomCampo.endsWith("_dec")) {
-                double v = ((CampoDecimal)c).getValor();
+                double v = ((CampoDecimal) c).getValor();
                 value = String.valueOf(v);
             } else if (nomCampo.endsWith("_car")) {
-                char v = ((CampoCaracter)c).getValor();
+                char v = ((CampoCaracter) c).getValor();
                 value = String.valueOf(v);
             } else {
-                value = ((CampoTexto)c).getTexto();
+                value = ((CampoTexto) c).getTexto();
             }
-            
+
             mod.setValueAt(value, i, 1);
-            
+
         }
-        
+
     }
 
     private void escribirRegistro(Registro r, int RRN) {
@@ -1593,6 +1654,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw")) {
 
             raf.seek(offsetInicial + (RRN * longitudRegistro));
+            raf.writeChar('-');
 
             for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
                 Campo c = r.getCampos().get(i);
@@ -1621,8 +1683,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_eliminar.setEnabled(false);
             }
 
+            archivoEnUso.getAvailList().suprimir(0);
+            int cabeza = archivoEnUso.getAvailList().vacia() ? -1 : archivoEnUso.getAvailList().obtener(0);
+
+            //Cambiamos la cabeza del availist
+            raf.seek(0);
+            raf.writeInt(cabeza);
+
             //Incrementamos la cantidad de registros en el archivo
-            raf.seek(4);
             int numReg = raf.readInt();
             raf.seek(4);
             raf.writeInt(numReg + 1);
@@ -1754,36 +1822,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    private void InsertRegistersLoadedInMemory(ArrayList<Registro> registros, File archivoC, ArchivoDeRegitstro archivoR) {
-        try ( RandomAccessFile raf = new RandomAccessFile(archivoC, "rw")) {
-            raf.seek(0);
-            InsertMetadataInNewFile(archivoC);
-            long finalDelArchivo = raf.length();
-            raf.seek(finalDelArchivo);
-            for (int i = 0; i < registros.size(); i++) {
-                for (int j = 0; j < archivoR.getCamposDelArchivo().size(); j++) {
-
-                }
-            }
-        } catch (IOException e) {
-        }
-
-    }
     private File archivoCargado;
     private File archivoIndices;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
     private boolean tieneLlavePrincipal = false;
     private ArchivoDeRegitstro archivoEnUso;
     private boolean nuevo = false;
+
     private Registro registroCargado;
+    private int RRNCargado = -1;
 
 }
-//try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
-//                raf.seek(0);
-//                System.out.println(raf.readInt());
-//                System.out.println(raf.readInt());
-//                System.out.println(raf.readUTF());
-//                System.out.println(raf.readUTF());
-//                System.out.println(raf.readInt());
-//            } catch (IOException e) {
-//            }

@@ -86,6 +86,8 @@ public class ArchivoDeRegitstro {
             BTree<Campo, Integer> arbolAux = (BTree<Campo, Integer>) os.readObject();
 
             this.arbolIndices = arbolAux;
+            
+            reconstruirAvailList(archivo);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -188,7 +190,7 @@ public class ArchivoDeRegitstro {
             }
         }
 
-        return ret + 2; //Sumamos 2 por la escritura del newline con el writeChars() method
+        return ret + 4; //Sumamos 2 por la escritura del newline con el writeChars() method
     }
 
     public BTree<Campo, Integer> getArbolIndices() {
@@ -213,6 +215,25 @@ public class ArchivoDeRegitstro {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
         return fileIndices;
+    }
+    
+    private void reconstruirAvailList(File file) {
+        
+        try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+            int pos = this.cabezaAvail;
+            this.AvailList = new LinkedList<>();
+            
+            while(pos != -1) {
+                this.AvailList.insertarAlFinal(pos);
+                raf.seek(pos);
+                
+                raf.readChar();
+                pos = raf.readInt();
+            }
+            
+        } catch (Exception e) {
+        }
+        
     }
 
 }
