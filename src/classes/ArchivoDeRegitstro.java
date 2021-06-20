@@ -130,7 +130,7 @@ public class ArchivoDeRegitstro {
         this.noRegistros = noRegistros;
     }
 
-    public int getCabezaAvail() {
+    private int getCabezaAvail() {
         return cabezaAvail;
     }
 
@@ -234,6 +234,19 @@ public class ArchivoDeRegitstro {
         } catch (Exception e) {
         }
         
+    }
+    
+    public void updateSecondaryKeys(int removed) {
+        for (int i = 0; i < secundarias.size(); i++) {
+            int val = secundarias.get(i);
+            
+            if (val > removed) {
+                secundarias.set(i, val-1);
+            } else if (val == removed) {
+                Integer old = secundarias.remove(i--);
+                System.out.println(old);
+            }
+        }
     }
 
 }
