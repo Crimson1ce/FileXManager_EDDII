@@ -5,25 +5,15 @@
  */
 package classes;
 
-import java.awt.Color;
-import java.awt.HeadlessException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -32,7 +22,19 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.io.RandomAccessFile;
-import javax.swing.table.DefaultTableColumnModel;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -336,7 +338,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("BankGothic Md BT", 3, 36)); // NOI18N
         jLabel5.setText("Nuevo Registro");
-        jd_nuevoRegistro.getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 370, -1));
+        jd_nuevoRegistro.getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 270, -1));
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado_3.png"))); // NOI18N
         jd_nuevoRegistro.getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 720, 450));
@@ -392,7 +394,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
         jd_buscarRegistro.getContentPane().add(jb_buscarRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(109, 70, 80, 30));
 
-        jb_clearCargado.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jb_clearCargado.setText("Clear");
         jb_clearCargado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -401,7 +402,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
         jd_buscarRegistro.getContentPane().add(jb_clearCargado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 400, -1, -1));
 
-        jb_modificarRegistro.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jb_modificarRegistro.setText("Modificar Registro");
         jb_modificarRegistro.setEnabled(false);
         jb_modificarRegistro.addActionListener(new java.awt.event.ActionListener() {
@@ -411,7 +411,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
         jd_buscarRegistro.getContentPane().add(jb_modificarRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 400, 140, -1));
 
-        jb_eliminarRegistro.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jb_eliminarRegistro.setText("Eliminar Registro");
         jb_eliminarRegistro.setEnabled(false);
         jb_eliminarRegistro.addActionListener(new java.awt.event.ActionListener() {
@@ -439,16 +438,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jtf_actual.setEditable(false);
         jPanel1.add(jtf_actual, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 50, 170, 30));
 
-        jLabel10.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel10.setText("Valor Actual: ");
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, -1, -1));
 
-        jLabel11.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel11.setText("Nuevo Valor");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, -1, -1));
         jPanel1.add(jtf_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 170, 30));
 
-        jb_modificarRegistroAceptar.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jb_modificarRegistroAceptar.setText("Aceptar");
         jb_modificarRegistroAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -474,16 +470,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jtf_actualCampo.setEditable(false);
         jPanel2.add(jtf_actualCampo, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 170, 30));
 
-        jLabel12.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel12.setText("Nombre Actual: ");
         jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 90, -1, -1));
 
-        jLabel13.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel13.setText("Nuevo Nombre:");
         jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, -1, -1));
         jPanel2.add(jtf_nuevoCampo, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 170, 30));
 
-        jb_modificarCampoAceptar.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jb_modificarCampoAceptar.setText("Aceptar");
         jb_modificarCampoAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -665,6 +658,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         Estandarizacion.add(exportExcel);
 
         exportXML.setText("Exportar en XML con Schema");
+        exportXML.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportXMLActionPerformed(evt);
+            }
+        });
         Estandarizacion.add(exportXML);
 
         MenuPrincipal.add(Estandarizacion);
@@ -688,7 +686,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             File fichero = null;
 
-            String path = jfc.getSelectedFile().getPath();
+            path = jfc.getSelectedFile().getPath();
 
             if (!path.endsWith(".xfile")) {
                 FileOutputStream fs = null;
@@ -724,7 +722,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return;
             }
             InsertMetadataInNewFile(fichero);
-
+            CrearXML(fichero);
             JOptionPane.showMessageDialog(this, "Archivo creado exitosamente.");
             archivoCargado = fichero;
             archivoEnUso = new ArchivoDeRegitstro(archivoCargado, archivoIndices);
@@ -903,9 +901,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return;
             }
 
-            jtf_actualCampo.setText((String)mod.getElementAt(selection));
+            jtf_actualCampo.setText((String) mod.getElementAt(selection));
             jtf_nuevoCampo.setText("");
-            
+
             jd_modificarCampo.pack();
             jd_modificarCampo.setLocationRelativeTo(this);
             jd_modificarCampo.setModal(true);
@@ -1240,7 +1238,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return;
             }
         }
-
+        agregarRegistroEnXML(r);
         archivoIndices = archivoEnUso.updateTree(archivoIndices);
         escribirRegistro(r, RRN);
         JOptionPane.showMessageDialog(jd_nuevoRegistro, "Registro insertado con éxito.",
@@ -1600,20 +1598,20 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private void jb_modificarCampoAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_modificarCampoAceptarActionPerformed
         try {
-            
+
             int seleccion = jList_campos.getSelectedIndex();
-            
+
             DefaultListModel mod = (DefaultListModel) jList_campos.getModel();
 
             String viejo = jtf_actualCampo.getText();
             String nuevoNombre = jtf_nuevoCampo.getText();
-            
+
             if (nuevoNombre == null || nuevoNombre.equals(viejo)) {
                 return;
             }
-            
+
             nuevoNombre = nuevoNombre.strip();
-            
+
             if (nuevoNombre.equals("")) {
                 return;
             } else if (nuevoNombre.length() > 25) {
@@ -1621,7 +1619,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         + "sobrepasar los 25 caracteres.", "Nombre demasiado largo.", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             nuevoNombre = nuevoNombre.toUpperCase();
 
 //                int opc = JOptionPane.showConfirmDialog(this, "¿Desea hacer este campo su llave principal?");
@@ -1635,59 +1633,64 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 //                        }
 //                    }
 //                }
+            int largo = nuevoNombre.length();
+            while (nuevoNombre.length() < 25) {
+                nuevoNombre += " ";
+            }
 
-                int largo = nuevoNombre.length();
-                while (nuevoNombre.length() < 25) {
-                    nuevoNombre += " ";
+            for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
+                if (nuevoNombre.equalsIgnoreCase(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25))) {
+                    JOptionPane.showMessageDialog(listCamposPantalla, "El campo ingresado ya existe.", "No se"
+                            + " puede modificar el campo", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-                
-                
-                for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
-                    if (nuevoNombre.equalsIgnoreCase(archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25))) {
-                        JOptionPane.showMessageDialog(listCamposPantalla, "El campo ingresado ya existe.", "No se"
-                                + " puede modificar el campo", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                }
-                
-                //Cambiamos el campo en la JList
-                mod.setElementAt(nuevoNombre, seleccion);
-                jList_campos.setModel(mod);
-                
-                //Obtenemos el campo del ArchivoDeRegistro
-                Campo campo = archivoEnUso.getCamposDelArchivo().get(seleccion);
-                String nombreViejo = campo.getNombreCampo();
-                
-                if (nombreViejo.endsWith("int")) {
-                    nuevoNombre += "_int";
-                } else if (nombreViejo.endsWith("dec")) {
-                    nuevoNombre += "_dec";
-                } else if (nombreViejo.endsWith("car")) {
-                    nuevoNombre += "_car";
+            }
+
+            //Cambiamos el campo en la JList
+            mod.setElementAt(nuevoNombre, seleccion);
+            jList_campos.setModel(mod);
+
+            //Obtenemos el campo del ArchivoDeRegistro
+            Campo campo = archivoEnUso.getCamposDelArchivo().get(seleccion);
+            String nombreViejo = campo.getNombreCampo();
+
+            if (nombreViejo.endsWith("int")) {
+                nuevoNombre += "_int";
+            } else if (nombreViejo.endsWith("dec")) {
+                nuevoNombre += "_dec";
+            } else if (nombreViejo.endsWith("car")) {
+                nuevoNombre += "_car";
+            } else {
+                nuevoNombre += "_str";
+            }
+
+            //Cambiamos el campo en el ArchivoDeRegistro
+            campo.setNombreCampo(nuevoNombre);
+
+            JOptionPane.showMessageDialog(listCamposPantalla, "Campo modificado con exito",
+                    "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
+
+            // Modificamos el campo en la tabla.
+            DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
+            String dataAux[] = new String[archivoEnUso.getCamposDelArchivo().size()];
+            for (int i = 0; i < dataAux.length; i++) {
+                if (i == seleccion) {
+                    dataAux[i] = nuevoNombre.substring(0, largo);
                 } else {
-                    nuevoNombre += "_str";
+                    dataAux[i] = model.getColumnName(i);
                 }
-                
-                //Cambiamos el campo en el ArchivoDeRegistro
-                campo.setNombreCampo(nuevoNombre);
-                
-                JOptionPane.showMessageDialog(listCamposPantalla, "Campo modificado con exito",
-                        "REALIZADO", JOptionPane.INFORMATION_MESSAGE);
-
-                // Modificamos el campo en la tabla.
-                DefaultTableModel model = (DefaultTableModel) jTable_Display.getModel();
-                String dataAux[] = new String[archivoEnUso.getCamposDelArchivo().size()];
-                for (int i = 0; i < dataAux.length; i++) {
-                    if (i == seleccion)
-                        dataAux[i] = nuevoNombre.substring(0, largo);
-                    else
-                        dataAux[i] = model.getColumnName(i);
-                }
-                saved = false;
+            }
+            saved = false;
 
         } catch (Exception e) {
         }
     }//GEN-LAST:event_jb_modificarCampoAceptarActionPerformed
+
+    private void exportXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportXMLActionPerformed
+        exportarXML();
+        JOptionPane.showMessageDialog(jd_nuevoRegistro, "Archivo exportado correctamente.",
+                "EXITO", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_exportXMLActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2084,14 +2087,77 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }
 
+    public void CrearXML(File archivo) {
+        try {
+            docFactory = DocumentBuilderFactory.newInstance();
+            docBuilder = docFactory.newDocumentBuilder();
+            //Elemento raíz
+            doc = docBuilder.newDocument();
+            rootElement = doc.createElement(archivo.getName());
+            doc.appendChild(rootElement);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void agregarRegistroEnXML(Registro r) {
+        Element registro = doc.createElement("resgitro");
+        rootElement.appendChild(registro);
+        for (int i = 0; i < r.getCampos().size(); i++) {
+            Campo c = r.getCampos().get(i);
+            String nomCampo = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
+            String value;
+            String identifier = nomCampo.substring(0, 25);
+            identifier = identifier.strip();
+            Attr attr = doc.createAttribute(identifier);
+            if (nomCampo.endsWith("_int")) {
+                int v = ((CampoEntero) c).getValor();
+                value = String.valueOf(v);
+                attr.setValue(value);
+                registro.setAttributeNode(attr);
+            } else if (nomCampo.endsWith("_dec")) {
+                double v = ((CampoDecimal) c).getValor();
+                value = String.valueOf(v);
+                attr.setValue(value);
+                registro.setAttributeNode(attr);
+            } else if (nomCampo.endsWith("_car")) {
+                char v = ((CampoCaracter) c).getValor();
+                value = String.valueOf(v);
+                attr.setValue(value);
+                registro.setAttributeNode(attr);
+            } else {
+                value = ((CampoTexto) c).getTexto();
+                attr.setValue(value);
+                registro.setAttributeNode(attr);
+            }
+        }
+    }
+
+    public void exportarXML() {
+        try {
+            transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File(path + ".xml"));
+            transformer.transform(source, result);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     private File archivoCargado;
     private File archivoIndices;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
     private boolean tieneLlavePrincipal = false;
     private ArchivoDeRegitstro archivoEnUso;
     private boolean nuevo = false;
-
+    private DocumentBuilderFactory docFactory = null;
+    private DocumentBuilder docBuilder = null;
+    private Document doc = null;
+    private Element rootElement = null;
+    private TransformerFactory transformerFactory = null;
     private Registro registroCargado;
     private int RRNCargado = -1;
-
+    private String path = "";
 }
