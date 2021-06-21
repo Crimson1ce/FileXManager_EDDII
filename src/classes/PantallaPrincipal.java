@@ -132,6 +132,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable_Display = new javax.swing.JTable();
         jb_siguiente = new javax.swing.JButton();
+        jpb_porcentaje = new javax.swing.JProgressBar();
         jb_anterior = new javax.swing.JButton();
         jb_final = new javax.swing.JButton();
         jb_inicio = new javax.swing.JButton();
@@ -331,6 +332,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jt_campos.setCellSelectionEnabled(true);
         jScrollPane4.setViewportView(jt_campos);
 
         jd_nuevoRegistro.getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 590, 290));
@@ -344,8 +346,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jd_nuevoRegistro.getContentPane().add(jb_crearRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 400, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("BankGothic Md BT", 3, 36)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Nuevo Registro");
-        jd_nuevoRegistro.getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 270, -1));
+        jd_nuevoRegistro.getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 370, -1));
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado_3.png"))); // NOI18N
         jd_nuevoRegistro.getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 720, 450));
@@ -518,23 +521,44 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable_Display);
 
-        jPanel_BackGround.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 950, 350));
+        jPanel_BackGround.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 950, 350));
 
         jb_siguiente.setText("Siguiente");
         jb_siguiente.setEnabled(false);
-        jPanel_BackGround.add(jb_siguiente, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 470, -1, -1));
+        jb_siguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_siguienteActionPerformed(evt);
+            }
+        });
+        jPanel_BackGround.add(jb_siguiente, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 490, -1, -1));
+        jPanel_BackGround.add(jpb_porcentaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 950, -1));
 
         jb_anterior.setText("Anterior");
         jb_anterior.setEnabled(false);
-        jPanel_BackGround.add(jb_anterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 470, -1, -1));
+        jb_anterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_anteriorActionPerformed(evt);
+            }
+        });
+        jPanel_BackGround.add(jb_anterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 490, -1, -1));
 
         jb_final.setText("Final");
         jb_final.setEnabled(false);
-        jPanel_BackGround.add(jb_final, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 470, -1, -1));
+        jb_final.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_finalActionPerformed(evt);
+            }
+        });
+        jPanel_BackGround.add(jb_final, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 490, -1, -1));
 
         jb_inicio.setText("Inicio");
         jb_inicio.setEnabled(false);
-        jPanel_BackGround.add(jb_inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 470, -1, -1));
+        jb_inicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_inicioActionPerformed(evt);
+            }
+        });
+        jPanel_BackGround.add(jb_inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 490, -1, -1));
 
         jLabelPrincipal.setForeground(new java.awt.Color(255, 255, 255));
         jLabelPrincipal.setText("Llave Principal: ");
@@ -877,11 +901,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
         jLabel_current.setText("Current File:");
         archivoCargado = null;
-        jTable_Display.setModel(new DefaultTableModel() {
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return false;
-            }
-        });
+        
+        clearDisplay(true);
+        
         //RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw");
         //raf.seek(0);
         //System.out.println(raf.readLine());
@@ -1271,12 +1293,29 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return;
             }
         }
-        agregarRegistroEnXML(r);
+//        agregarRegistroEnXML(r);
         archivoIndices = archivoEnUso.updateTree(archivoIndices);
         escribirRegistro(r, RRN);
         JOptionPane.showMessageDialog(jd_nuevoRegistro, "Registro insertado con éxito.",
                 "EXITO", JOptionPane.INFORMATION_MESSAGE);
-        jd_nuevoRegistro.setVisible(false);
+//        jd_nuevoRegistro.setVisible(false); 
+
+        Object[] columIden = {
+            "Campos",
+            "Valores"
+        };
+
+        Object[][] dataVector = new Object[archivoEnUso.getCamposDelArchivo().size()][2];
+        for (int i = 0; i < dataVector.length; i++) {
+            dataVector[i][0] = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25).strip();
+            dataVector[i][1] = "";
+
+        }
+
+        // Añadimos los datos a la tabla
+        mod.setDataVector(dataVector, columIden);
+        
+        clearDisplay(false);
 
         System.out.println(archivoEnUso.getArbolIndices().toString());
 
@@ -1534,6 +1573,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(jd_buscarRegistro, "Ocurrió un error al eliminar el registro del árbol.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
+            
+            clearDisplay(false);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(jd_buscarRegistro, "Ocurrió un error al eliminar el registro.",
@@ -1621,6 +1662,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             jt_busqueda.setValueAt(registroCargado.getCampos().get(row),
                     row, 1);
+            
+            
 
             jd_modificarRegistro.setVisible(false);
 
@@ -1746,20 +1789,96 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         currentPosList = archivoEnUso.tamanioMetadata();
         currentRegList = 0;
-        listFrom();
 
+        jpb_porcentaje.setMaximum(archivoEnUso.getNoRegistros());
+
+        listAfter();
 
     }//GEN-LAST:event_listRegistrosActionPerformed
 
-    public void listFrom() {
+    private void jb_siguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_siguienteActionPerformed
+        if (archivoEnUso.getNoRegistros() - 20 <= currentRegList) {
+            jb_siguiente.setEnabled(false);
+            jb_final.setEnabled(false);
+        }
+
+        jb_anterior.setEnabled(true);
+        jb_inicio.setEnabled(true);
+
+        listAfter();
+
+    }//GEN-LAST:event_jb_siguienteActionPerformed
+
+    private void jb_anteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_anteriorActionPerformed
+
+        if (currentRegList <= 20) {
+            jb_anterior.setEnabled(false);
+            jb_inicio.setEnabled(false);
+        }
+
+        jb_siguiente.setEnabled(true);
+        jb_final.setEnabled(true);
+
+        int largo = archivoEnUso.longitudRegistro();
+
+        int extra = ((currentRegList - 1) % 20) + 1;
+        currentPosList -= (20 + extra) * largo;
+        currentRegList -= (20 + extra);
+
+        listAfter();
+
+    }//GEN-LAST:event_jb_anteriorActionPerformed
+
+    private void jb_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_inicioActionPerformed
+
+        jb_siguiente.setEnabled(true);
+        jb_final.setEnabled(true);
+
+        jb_anterior.setEnabled(false);
+        jb_inicio.setEnabled(false);
+
+        currentPosList = archivoEnUso.tamanioMetadata();
+        currentRegList = 0;
+
+        listAfter();
+    }//GEN-LAST:event_jb_inicioActionPerformed
+
+    private void jb_finalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_finalActionPerformed
+        int target = archivoEnUso.getNoRegistros() - (archivoEnUso.getNoRegistros() % 20);
+
+        try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
+
+            int largo = archivoEnUso.longitudRegistro();
+            raf.seek(currentPosList);
+
+            while (currentRegList < target) {
+                if (raf.readChar() != '*') {
+                    currentRegList++;
+                }
+                currentPosList += largo;
+                raf.seek(currentPosList);
+            }
+
+            jb_siguiente.setEnabled(false);
+            jb_final.setEnabled(false);
+
+            jb_anterior.setEnabled(true);
+            jb_inicio.setEnabled(true);
+
+            listAfter();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jb_finalActionPerformed
+
+    public void listAfter() {
         DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
 
         String[][] data = new String[20][archivoEnUso.getCamposDelArchivo().size()];
 
         try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
-
-            int bottom = currentRegList;
-            int top = archivoEnUso.getNoRegistros();
 
             byte[] types = new byte[data[0].length];
 
@@ -1845,6 +1964,43 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
 
         m.setDataVector(data, columns);
+        jpb_porcentaje.setValue(currentRegList);
+    }
+
+    public void clearDisplay(boolean newTableModel) {
+        //Reset progressbar
+        jpb_porcentaje.setValue(0);
+
+        //Reset table
+        if (newTableModel) {
+            jTable_Display.setModel(new DefaultTableModel() {
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return false;
+                }
+            });
+        } else {
+            String[][] data = new String[20][archivoEnUso.getCamposDelArchivo().size()];
+            DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
+
+            String[] columns = new String[data[0].length];
+            for (int i = 0; i < columns.length; i++) {
+                columns[i] = m.getColumnName(i);
+            }
+
+            m.setDataVector(data, columns);
+        }
+
+        //Reset navigation buttons
+        jb_siguiente.setEnabled(false);
+        jb_final.setEnabled(false);
+
+        jb_anterior.setEnabled(false);
+        jb_inicio.setEnabled(false);
+        
+        //Reset helper variables
+        currentPosList = -1;
+        currentRegList = -1;
+
     }
 
     /**
@@ -1951,6 +2107,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JDialog jd_nuevoRegistro;
     private javax.swing.JLabel jl_mod_BG;
     private javax.swing.JLabel jl_mod_BG1;
+    private javax.swing.JProgressBar jpb_porcentaje;
     private javax.swing.JSpinner js_tamanioCadena;
     private javax.swing.JTable jt_busqueda;
     private javax.swing.JTable jt_campos;
