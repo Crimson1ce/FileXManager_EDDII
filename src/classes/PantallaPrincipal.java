@@ -5,10 +5,12 @@
  */
 package classes;
 
+import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -816,8 +818,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             jButton_modificar.setEnabled(true);
             jButton_eliminar.setEnabled(true);
             jButton_hacerPrincipal.setEnabled(true);
-                    //} catch (IOException e) {
-                    //}
+            //} catch (IOException e) {
+            //}
         }
     }//GEN-LAST:event_newFileActionPerformed
 
@@ -2351,6 +2353,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void cargarRegistro(int RRN) {
 
         if (RRN > archivoEnUso.getNoRegistros() - 1) {
+            JOptionPane.showMessageDialog(this, "Error cargar registro");
             return;
         }
 
@@ -2643,7 +2646,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_modificar.setEnabled(false);
                 jButton_eliminar.setEnabled(false);
                 jButton_hacerPrincipal.setEnabled(false);
-                jButton_hacerSecundaria.setEnabled(false)
+                jButton_hacerSecundaria.setEnabled(false);
             }
 
         } catch (FileNotFoundException e) {
@@ -2710,6 +2713,43 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    private void parsePerson() {
+        try ( FileReader fir = new FileReader("C:\\Users\\Tyler C\\Downloads\\PersonFile.csv");  BufferedReader br = new BufferedReader(fir)) {
+            br.readLine();
+            String line = "";
+            int cont = 0;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                Registro r = new Registro(values.length);
+                CampoEntero ce = new CampoEntero();
+                ce.setValor(Integer.parseInt(values[0]));
+                r.añadirCampo(ce);
+                archivoEnUso.getArbolIndices().insert(ce, cont);
+                
+                CampoTexto ct = new CampoTexto();
+                ct.setLongitud(20);
+                ct.setTexto(values[1]);
+                r.añadirCampo(ct);
+                
+                ce = new CampoEntero();
+                ce.setValor(Integer.parseInt(values[2]));
+                r.añadirCampo(ce);
+                
+                ce = new CampoEntero();
+                ce.setValor(Integer.parseInt(values[3]));
+                r.añadirCampo(ce);
+                
+                escribirRegistro(r,cont);
+                cont++;
+            }
+            archivoEnUso.updateTree(archivoIndices);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     private File archivoCargado;
     private File archivoIndices;
     private boolean saved = true; //Debe incicializarse en true porque por default no hay un archivo abierto. Al crear un archivo se hace false.
