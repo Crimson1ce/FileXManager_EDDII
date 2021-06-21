@@ -136,6 +136,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jb_anterior = new javax.swing.JButton();
         jb_final = new javax.swing.JButton();
         jb_inicio = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jLabelPrincipal = new javax.swing.JLabel();
         jLabel_current = new javax.swing.JLabel();
         jLabel_Title = new javax.swing.JLabel();
@@ -560,6 +561,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
         jPanel_BackGround.add(jb_inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 490, -1, -1));
 
+        jButton1.setText("Clear");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel_BackGround.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 490, -1, -1));
+
         jLabelPrincipal.setForeground(new java.awt.Color(255, 255, 255));
         jLabelPrincipal.setText("Llave Principal: ");
         jPanel_BackGround.add(jLabelPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 340, 30));
@@ -685,6 +694,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         Estandarizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         exportExcel.setText("Exportar en archivo Excel");
+        exportExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportExcelActionPerformed(evt);
+            }
+        });
         Estandarizacion.add(exportExcel);
 
         exportXML.setText("Exportar en XML con Schema");
@@ -901,9 +915,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
         jLabel_current.setText("Current File:");
         archivoCargado = null;
-        
+
         clearDisplay(true);
-        
+
         //RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw");
         //raf.seek(0);
         //System.out.println(raf.readLine());
@@ -1314,7 +1328,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         // Añadimos los datos a la tabla
         mod.setDataVector(dataVector, columIden);
-        
+
         clearDisplay(false);
 
         System.out.println(archivoEnUso.getArbolIndices().toString());
@@ -1573,7 +1587,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(jd_buscarRegistro, "Ocurrió un error al eliminar el registro del árbol.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
+
             clearDisplay(false);
 
         } catch (Exception e) {
@@ -1662,10 +1676,31 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             jt_busqueda.setValueAt(registroCargado.getCampos().get(row),
                     row, 1);
-            
-            
 
             jd_modificarRegistro.setVisible(false);
+
+            
+            int target = currentRegList - (((currentRegList - 1) % 20) + 1);
+
+            try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
+
+                int largo = archivoEnUso.longitudRegistro();
+
+                while (currentRegList > target) {
+
+                    currentPosList -= largo;
+                    raf.seek(currentPosList);
+
+                    if (raf.readChar() != '*') {
+                        currentRegList--;
+                    }
+                }
+
+                listAfter();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(jd_modificarRegistro, "El nuevo valor no es válido.",
@@ -1811,7 +1846,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private void jb_anteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_anteriorActionPerformed
 
-        if (currentRegList <= 20) {
+        if (currentRegList <= 40) {
             jb_anterior.setEnabled(false);
             jb_inicio.setEnabled(false);
         }
@@ -1819,14 +1854,27 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jb_siguiente.setEnabled(true);
         jb_final.setEnabled(true);
 
-        int largo = archivoEnUso.longitudRegistro();
+        int target = currentRegList - (((currentRegList - 1) % 20) + 1) - 20;
 
-        int extra = ((currentRegList - 1) % 20) + 1;
-        currentPosList -= (20 + extra) * largo;
-        currentRegList -= (20 + extra);
+        try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
 
-        listAfter();
+            int largo = archivoEnUso.longitudRegistro();
 
+            while (currentRegList > target) {
+
+                currentPosList -= largo;
+                raf.seek(currentPosList);
+
+                if (raf.readChar() != '*') {
+                    currentRegList--;
+                }
+            }
+
+            listAfter();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jb_anteriorActionPerformed
 
     private void jb_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_inicioActionPerformed
@@ -1872,6 +1920,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jb_finalActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        clearDisplay(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportExcelActionPerformed
+        if(!verifyOpen()) return;
+        
+        ExcelFactory ef = new ExcelFactory(archivoCargado, archivoEnUso, this);
+        ef.exportExcel();
+        
+    }//GEN-LAST:event_exportExcelActionPerformed
 
     public void listAfter() {
         DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
@@ -1952,6 +2012,97 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
 
         } catch (EOFException eof) {
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        String[] columns = new String[data[0].length];
+        for (int i = 0; i < columns.length; i++) {
+            columns[i] = m.getColumnName(i);
+        }
+
+        m.setDataVector(data, columns);
+        jpb_porcentaje.setValue(currentRegList);
+    }
+
+    public void listBefore() {
+        DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
+
+        String[][] data = new String[20][archivoEnUso.getCamposDelArchivo().size()];
+
+        try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
+
+            byte[] types = new byte[data[0].length];
+
+            for (int i = 0; i < types.length; i++) {
+                String nom = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
+                if (nom.endsWith("int")) {
+                    types[i] = 1;
+                } else if (nom.endsWith("dec")) {
+                    types[i] = 2;
+                } else if (nom.endsWith("car")) {
+                    types[i] = 3;
+                } else if (nom.endsWith("str")) {
+                    types[i] = 4;
+                } else {
+                    System.out.println("ERRORRRR");
+                }
+            }
+
+            int largo = archivoEnUso.longitudRegistro();
+
+            int row = 19;
+            System.out.println("Registros: " + archivoEnUso.getNoRegistros());
+            for (; row > 0; currentRegList--) {
+
+                currentPosList -= largo;
+                raf.seek(currentPosList);
+
+                System.out.println("Iteración atrás:");
+                System.out.println(currentPosList);
+                System.out.println(currentRegList);
+
+                char mark = raf.readChar();
+                if (mark == '*') {
+                    currentRegList++;
+                    currentPosList -= largo;
+                    raf.seek(currentPosList);
+                    continue;
+                }
+
+                for (int j = 0; j < data[0].length; j++) {
+                    System.out.println("Posicion actual" + raf.getFilePointer());
+                    switch (types[j]) {
+                        case 1: {
+                            String val = String.valueOf(raf.readInt());
+                            data[row][j] = val;
+                            break;
+                        }
+                        case 2: {
+                            String val = String.valueOf(raf.readDouble());
+                            data[row][j] = val;
+                            break;
+                        }
+                        case 3: {
+                            String val = String.valueOf(raf.readChar());
+                            data[row][j] = val;
+                            break;
+                        }
+                        case 4: {
+                            String val = raf.readUTF();
+                            data[row][j] = val;
+                            break;
+                        }
+                        default: {
+                            System.out.println("Errorazo");
+                        }
+                    }
+                }
+                row--;
+            }
+
+        } catch (EOFException eof) {
             eof.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1996,7 +2147,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jb_anterior.setEnabled(false);
         jb_inicio.setEnabled(false);
-        
+
         //Reset helper variables
         currentPosList = -1;
         currentRegList = -1;
@@ -2057,6 +2208,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem exportExcel;
     private javax.swing.JMenuItem exportXML;
     private javax.swing.JMenuItem introRegistros;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton_agregar;
     private javax.swing.JButton jButton_eliminar;
     private javax.swing.JButton jButton_modificar;
