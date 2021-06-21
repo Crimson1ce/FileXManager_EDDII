@@ -64,12 +64,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         listCamposPantalla = new javax.swing.JDialog();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList_campos = new javax.swing.JList<>();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel_Title_Campos = new javax.swing.JLabel();
         jButton_agregar = new javax.swing.JButton();
         jButton_modificar = new javax.swing.JButton();
         jButton_eliminar = new javax.swing.JButton();
-        jLabel_Title_Campos = new javax.swing.JLabel();
+        jButton_hacerSecundaria = new javax.swing.JButton();
+        jButton_hacerPrincipal = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList_campos = new javax.swing.JList<>();
         jLabel_BG_campos = new javax.swing.JLabel();
         pantallaCrearCampos = new javax.swing.JDialog();
         jLabel1 = new javax.swing.JLabel();
@@ -163,15 +166,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         listCamposPantalla.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jList_campos.setModel(new DefaultListModel());
-        jList_campos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList_camposMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(jList_campos);
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        listCamposPantalla.getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 197, 234));
+        jLabel_Title_Campos.setFont(new java.awt.Font("BankGothic Lt BT", 3, 36)); // NOI18N
+        jLabel_Title_Campos.setForeground(new java.awt.Color(65, 67, 106));
+        jLabel_Title_Campos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel_Title_Campos.setText("Campos");
+        jLabel_Title_Campos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(65, 67, 106), 3));
+        jPanel4.add(jLabel_Title_Campos, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 210, -1));
 
         jButton_agregar.setBackground(new java.awt.Color(65, 67, 106));
         jButton_agregar.setFont(new java.awt.Font("BankGothic Md BT", 1, 14)); // NOI18N
@@ -184,7 +186,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_agregarActionPerformed(evt);
             }
         });
-        listCamposPantalla.getContentPane().add(jButton_agregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 90, 100, -1));
+        jPanel4.add(jButton_agregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 100, -1));
 
         jButton_modificar.setBackground(new java.awt.Color(65, 67, 106));
         jButton_modificar.setFont(new java.awt.Font("BankGothic Md BT", 1, 14)); // NOI18N
@@ -197,7 +199,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_modificarActionPerformed(evt);
             }
         });
-        listCamposPantalla.getContentPane().add(jButton_modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 100, -1));
+        jPanel4.add(jButton_modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 130, 100, -1));
 
         jButton_eliminar.setBackground(new java.awt.Color(65, 67, 106));
         jButton_eliminar.setFont(new java.awt.Font("BankGothic Md BT", 1, 14)); // NOI18N
@@ -210,17 +212,48 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_eliminarActionPerformed(evt);
             }
         });
-        listCamposPantalla.getContentPane().add(jButton_eliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 100, -1));
+        jPanel4.add(jButton_eliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, 100, -1));
 
-        jLabel_Title_Campos.setFont(new java.awt.Font("BankGothic Lt BT", 3, 36)); // NOI18N
-        jLabel_Title_Campos.setForeground(new java.awt.Color(65, 67, 106));
-        jLabel_Title_Campos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel_Title_Campos.setText("Campos");
-        jLabel_Title_Campos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(65, 67, 106), 3));
-        listCamposPantalla.getContentPane().add(jLabel_Title_Campos, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 210, -1));
+        jButton_hacerSecundaria.setBackground(new java.awt.Color(65, 67, 106));
+        jButton_hacerSecundaria.setFont(new java.awt.Font("BankGothic Md BT", 1, 14)); // NOI18N
+        jButton_hacerSecundaria.setForeground(new java.awt.Color(255, 204, 0));
+        jButton_hacerSecundaria.setText("Hacer llave secundaria");
+        jButton_hacerSecundaria.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.yellow, null, null));
+        jButton_hacerSecundaria.setBorderPainted(false);
+        jButton_hacerSecundaria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_hacerSecundariaActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton_hacerSecundaria, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, 220, -1));
+
+        jButton_hacerPrincipal.setBackground(new java.awt.Color(65, 67, 106));
+        jButton_hacerPrincipal.setFont(new java.awt.Font("BankGothic Md BT", 1, 14)); // NOI18N
+        jButton_hacerPrincipal.setForeground(new java.awt.Color(255, 204, 0));
+        jButton_hacerPrincipal.setText("Hacer llave principal");
+        jButton_hacerPrincipal.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.yellow, null, null));
+        jButton_hacerPrincipal.setBorderPainted(false);
+        jButton_hacerPrincipal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_hacerPrincipalActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton_hacerPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 220, -1));
+
+        jList_campos.setModel(new DefaultListModel());
+        jList_campos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList_camposMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jList_campos);
+
+        jPanel4.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 197, 234));
 
         jLabel_BG_campos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado 2.png"))); // NOI18N
-        listCamposPantalla.getContentPane().add(jLabel_BG_campos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 350));
+        jPanel4.add(jLabel_BG_campos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 390));
+
+        listCamposPantalla.getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 390));
 
         pantallaCrearCampos.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -782,8 +815,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             jButton_agregar.setEnabled(true);
             jButton_modificar.setEnabled(true);
             jButton_eliminar.setEnabled(true);
-            //} catch (IOException e) {
-            //}
+            jButton_hacerPrincipal.setEnabled(true);
+                    //} catch (IOException e) {
+                    //}
         }
     }//GEN-LAST:event_newFileActionPerformed
 
@@ -1566,6 +1600,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_agregar.setEnabled(true);
                 jButton_modificar.setEnabled(true);
                 jButton_eliminar.setEnabled(true);
+                jButton_hacerPrincipal.setEnabled(true);
             }
 
             //Decrementar en el archivo de registros
@@ -1679,7 +1714,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             jd_modificarRegistro.setVisible(false);
 
-            
             int target = currentRegList - (((currentRegList - 1) % 20) + 1);
 
             try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
@@ -1926,12 +1960,34 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportExcelActionPerformed
-        if(!verifyOpen()) return;
-        
+        if (!verifyOpen()) {
+            return;
+        }
+
         ExcelFactory ef = new ExcelFactory(archivoCargado, archivoEnUso, this);
         ef.exportExcel();
-        
+
     }//GEN-LAST:event_exportExcelActionPerformed
+
+    private void jButton_hacerPrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_hacerPrincipalActionPerformed
+        int selection = jList_campos.getSelectedIndex();
+
+        // No hay nada seleccionado
+        if (selection == -1) {
+            JOptionPane.showMessageDialog(listCamposPantalla, "Debe seleccionar un campo.");
+            return;
+        }
+
+        archivoEnUso.setLlavePrincipal(selection);
+        jLabelPrincipal.setText("Llave principal: " + jList_campos.getModel().getElementAt(selection));
+
+        saved = false;
+
+    }//GEN-LAST:event_jButton_hacerPrincipalActionPerformed
+
+    private void jButton_hacerSecundariaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_hacerSecundariaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_hacerSecundariaActionPerformed
 
     public void listAfter() {
         DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
@@ -2211,6 +2267,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton_agregar;
     private javax.swing.JButton jButton_eliminar;
+    private javax.swing.JButton jButton_hacerPrincipal;
+    private javax.swing.JButton jButton_hacerSecundaria;
     private javax.swing.JButton jButton_modificar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -2236,6 +2294,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem_listarCampos;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel_BackGround;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -2414,6 +2473,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_agregar.setEnabled(false);
                 jButton_modificar.setEnabled(false);
                 jButton_eliminar.setEnabled(false);
+                jButton_hacerPrincipal.setEnabled(false);
             }
 
             archivoEnUso.getAvailList().suprimir(0);
@@ -2576,10 +2636,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_agregar.setEnabled(true);
                 jButton_modificar.setEnabled(true);
                 jButton_eliminar.setEnabled(true);
+                jButton_hacerPrincipal.setEnabled(true);
+                jButton_hacerSecundaria.setEnabled(true);
             } else {
                 jButton_agregar.setEnabled(false);
                 jButton_modificar.setEnabled(false);
                 jButton_eliminar.setEnabled(false);
+                jButton_hacerPrincipal.setEnabled(false);
+                jButton_hacerSecundaria.setEnabled(false)
             }
 
         } catch (FileNotFoundException e) {
