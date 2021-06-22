@@ -26,7 +26,6 @@ public class CampoTexto extends Campo {
                 texto += " ";
             }
         }
-        System.out.println("Después del set" + texto);
         this.texto = texto;
     }
 

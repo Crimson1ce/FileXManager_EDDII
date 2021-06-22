@@ -398,16 +398,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         });
         jt_busqueda.setColumnSelectionAllowed(true);
-        jt_busqueda.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jt_busquedaFocusGained(evt);
-            }
-        });
-        jt_busqueda.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jt_busquedaMouseClicked(evt);
-            }
-        });
         jScrollPane5.setViewportView(jt_busqueda);
 
         jd_buscarRegistro.getContentPane().add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, 590, 270));
@@ -1488,25 +1478,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jb_eliminarRegistroActionPerformed
 
-    private void jt_busquedaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jt_busquedaFocusGained
-        int selec = jt_busqueda.getSelectedRow();
-
-        if (selec == -1) {
-            return;
-        }
-
-        jb_modificarRegistro.setEnabled(true);
-    }//GEN-LAST:event_jt_busquedaFocusGained
-
-    private void jt_busquedaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_busquedaMouseClicked
-        int x = evt.getX();
-        int y = evt.getY();
-
-        DefaultTableModel m = (DefaultTableModel) jt_busqueda.getModel();
-
-
-    }//GEN-LAST:event_jt_busquedaMouseClicked
-
     private void jb_modificarRegistroAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_modificarRegistroAceptarActionPerformed
 
         int row = jt_busqueda.getSelectedRow();
@@ -2000,7 +1971,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         String nomCampo1 = cruce1.getCamposDelArchivo().get(seleccion1).getNombreCampo();
         String nomCampo2 = cruce2.getCamposDelArchivo().get(seleccion2).getNombreCampo();
 
-        if (nomCampo1.substring(nomCampo1.length() - 3, nomCampo1.length()).equals(nomCampo1.substring(nomCampo1.length() - 3, nomCampo1.length()))) {
+        if (!nomCampo1.substring(nomCampo1.length() - 3, nomCampo1.length()).equals(nomCampo1.substring(nomCampo1.length() - 3, nomCampo1.length()))) {
             JOptionPane.showMessageDialog(jd_cruce, "Los campos deben ser del mismo tipo.",
                     "No se puede cruzar", JOptionPane.ERROR_MESSAGE);
             return;
@@ -2041,23 +2012,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             return;
         }
 
-        String nom = secuencial.getCamposDelArchivo().get(c_s).getNombreCampo();
-        if (nom.endsWith("str")) {
-            crearCampoCruce(nom, ((CampoTexto) secuencial.getCamposDelArchivo().get(c_s)).getLongitud());
-        } else {
-            crearCampoCruce(nom, 15);
-        }
+        String nom;
 
         for (int i = 0; i < secuencial.getCamposDelArchivo().size(); i++) {
-            if (i == c_s) {
-                continue;
-            }
 
             nom = secuencial.getCamposDelArchivo().get(i).getNombreCampo();
             if (nom.endsWith("str")) {
-                crearCampoCruce(nom, ((CampoTexto) secuencial.getCamposDelArchivo().get(i)).getLongitud());
+                crearCampoCruce(nom, ((CampoTexto) secuencial.getCamposDelArchivo().get(i)).getLongitud(), i == c_s);
             } else {
-                crearCampoCruce(nom, 15);
+                crearCampoCruce(nom, 15, i == c_s);
             }
         }
 
@@ -2065,106 +2028,218 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             if (i == c_l) {
                 continue;
             }
-
             nom = logaritmico.getCamposDelArchivo().get(i).getNombreCampo();
             if (nom.endsWith("str")) {
-                crearCampoCruce(nom, ((CampoTexto) logaritmico.getCamposDelArchivo().get(i)).getLongitud());
+                crearCampoCruce(nom, ((CampoTexto) logaritmico.getCamposDelArchivo().get(i)).getLongitud(), false);
             } else {
-                crearCampoCruce(nom, 15);
+                crearCampoCruce(nom, 15, false);
             }
         }
 
-        saveFileCruce();
-
-        try ( RandomAccessFile raf_s = new RandomAccessFile(secuencial.getBaseFile(), "r");  RandomAccessFile raf_l = new RandomAccessFile(logaritmico.getBaseFile(), "r");) {
+        try ( RandomAccessFile raf_s = new RandomAccessFile(secuencial.getBaseFile(), "r")) {
 
             int offset_s = secuencial.tamanioMetadata();
             int largo_s = secuencial.longitudRegistro();
 
-            int RRN = 0;
-            raf_s.seek(offset_s);
+            int RRN_s = 0;
             
+
             int toKey = secuencial.offsetToKey();
-            
-            String type = archivoEnUso.getCamposDelArchivo().get(0).getNombreCampo().substring(26, 29);
-            
+
+            String type = archivoEnUso.getCamposDelArchivo().get(0).getNombreCampo();
+            int longitudCampoPrincipal = 15;
+
+            if (type.endsWith("str")) {
+                longitudCampoPrincipal = ((CampoTexto) archivoEnUso.getCamposDelArchivo().get(c_s)).getLongitud();
+            }
+
+            int cont = 0;
             for (int i = 0; i < secuencial.getNoRegistros(); i++) {
 
+                raf_s.seek(offset_s);
+                
                 if (raf_s.readChar() == '*') {
                     i--;
-                    offset_s += largo_s - 2;
+                    offset_s += largo_s;
                     raf_s.seek(offset_s);
-                    RRN++;
+                    RRN_s++;
                     continue;
                 }
 
-//                Registro r = new Registro(secuencial.getCamposDelArchivo().size());
+                raf_s.seek(offset_s + toKey);
 
-                raf_s.seek(offset_s + toKey - 2);
-                
-                Campo c;
-                
-                if (type.equals("int")) {
+                Campo principal;
+
+                if (type.endsWith("int")) {
                     CampoEntero ce = new CampoEntero();
                     ce.setValor(raf_s.readInt());
-                    c = ce;
-                } else if (type.equals("dec")) {
+                    principal = ce;
+                    System.out.println(1);
+                } else if (type.endsWith("dec")) {
                     CampoDecimal ce = new CampoDecimal();
                     ce.setValor(raf_s.readDouble());
-                    c = ce;
-                } else if (type.equals("car")) {
+                    principal = ce;
+                    System.out.println(2);
+                } else if (type.endsWith("car")) {
                     CampoCaracter ce = new CampoCaracter(raf_s.readChar());
-                    c = ce;
-                } else {
+                    principal = ce;
+                    System.out.println(3);
+                } else if (type.endsWith("str")){
                     CampoTexto ce = new CampoTexto();
-//                    ce.setLongitud(largo_s);
+                    ce.setLongitud(longitudCampoPrincipal);
                     ce.setTexto(raf_s.readUTF());
-                    c = ce;
+                    principal = ce;
+                    System.out.println(4);
+                } else {
+                    System.out.println("EROEJSDLDN");
+                    principal = null;
+                    System.out.println(5);
+                }
+                System.out.println(type);
+
+                BTree<Campo, Integer> tree = archivoEnUso.getArbolIndices();
+                
+                System.out.println(tree.size());
+                
+                Pair<BTree.Node<Campo, Integer>, Integer> pair;
+
+                pair = tree.search(principal);
+
+                // El campo no está en el archivo logaritmico
+                if (pair == null) {
+                    offset_s += largo_s;
+                    raf_s.seek(offset_s);
+                    RRN_s++;
+                    continue;
                 }
 
-                RRN++;
-            }
+                archivoEnUso.getArbolIndices().insert(principal, cont);
 
-//            raf.seek(offsetInicial + (RRN * longitudRegistro));
-//
-//            Registro r = new Registro(archivoEnUso.getCamposDelArchivo().size());
-//
-//            raf.readChar();
-//
-//            for (int i = 0; i < archivoEnUso.getCamposDelArchivo().size(); i++) {
-//                String nomCampo = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
-//
-//                if (nomCampo.endsWith("_int")) {
-//                    int val = raf.readInt();
-//                    CampoEntero campo = new CampoEntero();
-//                    campo.setValor(val);
-//                    r.añadirCampo(campo);
-//                } else if (nomCampo.endsWith("_dec")) {
-//                    double val = raf.readDouble();
-//                    CampoDecimal campo = new CampoDecimal();
-//                    campo.setValor(val);
-//                    r.añadirCampo(campo);
-//                } else if (nomCampo.endsWith("_str")) {
-//                    String val = raf.readUTF();
-//                    CampoTexto campo = new CampoTexto();
-//                    campo.setLongitud(((CampoTexto) archivoEnUso.getCamposDelArchivo().get(i)).getLongitud());
-//                    campo.setTexto(val);
-//                    r.añadirCampo(campo);
-//                } else {
-//                    char val = raf.readChar();
-//                    CampoCaracter campo = new CampoCaracter(val);
-//                    r.añadirCampo(campo);
-//                }
-//
-//            }
-//
-//            registroCargado = r;
-//            RRNCargado = RRN;
+                BTree.Node<Campo, Integer> nodo = pair.getPrimero();
+                int indice = pair.getSegundo();
+
+                BTree.Entry<Campo, Integer> entry = nodo.getEntry(indice);
+                int RRN_l = entry.getValue();
+
+                Registro r_s = cargarRegistroCruce(secuencial, RRN_s);
+                Registro r_l = cargarRegistroCruce(logaritmico, RRN_l);
+
+                if (r_s == null || r_l == null) {
+                    System.out.println("Error carga de registros de archivos");
+                    return;
+                }
+
+                int totalCampos = r_s.getCampos().size() + r_s.getCampos().size() - 1;
+                Registro r_nuevo = new Registro(totalCampos);
+
+                for (int k = 0; k < r_s.getCampos().size(); k++) {
+
+                    Campo campo = r_s.getCampos().get(k);
+                    r_nuevo.añadirCampo(campo);
+                }
+
+                for (int k = 0; k < r_l.getCampos().size(); k++) {
+                    if (k == c_l) {
+                        continue;
+                    }
+
+                    Campo campo = r_l.getCampos().get(k);
+                    r_nuevo.añadirCampo(campo);
+                }
+
+                escribirRegistro(r_nuevo, cont);
+
+                RRN_s++;
+                cont++;
+                offset_s += largo_s;
+            }
+            archivoEnUso.updateTree(archivoIndices);
+            
+            JOptionPane.showMessageDialog(jd_cruce, "Archivos cruzados exitosamente.", 
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            jd_cruce.setVisible(false);
+            
+            cruce1 = null;
+            cruce2 = null;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+//    private void nuevoRegistroCruce(Registro r, int RRN) {
+//
+//        byte[] types = new byte[archivoEnUso.getCamposDelArchivo().size()];
+//
+//        for (int i = 0; i < types.length; i++) {
+//            String nom = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
+//            if (nom.endsWith("int")) {
+//                types[i] = 1;
+//            } else if (nom.endsWith("dec")) {
+//                types[i] = 2;
+//            } else if (nom.endsWith("car")) {
+//                types[i] = 3;
+//            } else {
+//                types[i] = 4;
+//            }
+//        }
+//
+//        escribirRegistro(r, RRN);
+//    }
+
+    private Registro cargarRegistroCruce(ArchivoDeRegitstro archivo, int RRN) {
+
+        if (RRN > archivo.getNoRegistros() - 1) {
+            JOptionPane.showMessageDialog(this, "Error cargar registro para cruce");
+            return null;
+        }
+
+        int offsetInicial = archivo.tamanioMetadata();
+        int longitudRegistro = archivo.longitudRegistro();
+
+        try ( RandomAccessFile raf = new RandomAccessFile(archivo.getBaseFile(), "r")) {
+            raf.seek(offsetInicial + (RRN * longitudRegistro));
+
+            Registro r = new Registro(archivo.getCamposDelArchivo().size());
+
+            raf.readChar();
+
+            for (int i = 0; i < archivo.getCamposDelArchivo().size(); i++) {
+                String nomCampo = archivo.getCamposDelArchivo().get(i).getNombreCampo();
+
+                if (nomCampo.endsWith("_int")) {
+                    int val = raf.readInt();
+                    CampoEntero campo = new CampoEntero();
+                    campo.setValor(val);
+                    r.añadirCampo(campo);
+                } else if (nomCampo.endsWith("_dec")) {
+                    double val = raf.readDouble();
+                    CampoDecimal campo = new CampoDecimal();
+                    campo.setValor(val);
+                    r.añadirCampo(campo);
+                } else if (nomCampo.endsWith("_str")) {
+                    String val = raf.readUTF();
+                    CampoTexto campo = new CampoTexto();
+                    campo.setLongitud(((CampoTexto) archivo.getCamposDelArchivo().get(i)).getLongitud());
+                    campo.setTexto(val);
+                    r.añadirCampo(campo);
+                } else {
+                    char val = raf.readChar();
+                    CampoCaracter campo = new CampoCaracter(val);
+                    r.añadirCampo(campo);
+                }
+
+            }
+
+            return r;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     private void saveFileCruce() {
@@ -2175,7 +2250,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    private void crearCampoCruce(String nombreCampo, int longitud) {
+    private void crearCampoCruce(String nombreCampo, int longitud, boolean esLlavePrincipal) {
 
         boolean repetido = false;
 
@@ -2198,9 +2273,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             archivoEnUso.getCamposDelArchivo().add(campo);
         }
 
-        if (archivoEnUso.getCamposDelArchivo().size() == 1) {
+        if (esLlavePrincipal) {
             jLabelPrincipal.setText("Llave principal: " + nombreCampo.substring(0, 25));
-            archivoEnUso.setLlavePrincipal(0);
+            archivoEnUso.setLlavePrincipal(archivoEnUso.getCamposDelArchivo().size() - 1);
             tieneLlavePrincipal = true;
         }
 
@@ -2657,6 +2732,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             registroCargado = r;
             RRNCargado = RRN;
+            
+            mostrarRegistro(r);
 
         } catch (FileNotFoundException e) {
         } catch (IOException ex) {
@@ -2696,7 +2773,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         int offsetInicial = archivoEnUso.tamanioMetadata();
         int longitudRegistro = archivoEnUso.longitudRegistro();
-//        int numRegistros = archivoEnUso.getNoRegistros();
 
         try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "rw")) {
 
@@ -2731,8 +2807,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_hacerPrincipal.setEnabled(false);
             }
 
-            archivoEnUso.getAvailList().suprimir(0);
-            int cabeza = archivoEnUso.getAvailList() == null || archivoEnUso.getAvailList().vacia() ? -1 : archivoEnUso.getAvailList().obtener(0);
+            int cabeza;
+            if(archivoEnUso.getAvailList() == null || archivoEnUso.getAvailList().vacia()) {
+                cabeza = -1;
+            } else {
+                archivoEnUso.getAvailList().suprimir(0);
+                cabeza = archivoEnUso.getAvailList().obtener(0);
+            }
 
             //Cambiamos la cabeza del availist
             raf.seek(0);
@@ -2747,7 +2828,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros() + 1);
 
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

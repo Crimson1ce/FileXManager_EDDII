@@ -348,6 +348,13 @@ public class BTree<K extends Comparable, V> implements Serializable {
         return treeSearch(key, root.getChild(i));
     }
 
+    /**
+     * Realiza una búsqueda en el árbol B en búsqueda de la llave específicada.
+     *
+     * @param key La llave a buscar
+     * @return Si se encuentra la llave, el nodo y el índice en el nodo de la
+     * llave; de otro modo, retorna null.
+     */
     public Pair<Node<K, V>, Integer> search(K key) {
 
         Pair<Node<K, V>, Integer> pair = treeSearch(key, root);

@@ -1,7 +1,6 @@
 package classes;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 public abstract class Campo implements Comparable<Campo>, Serializable {
 

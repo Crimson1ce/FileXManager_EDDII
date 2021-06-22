@@ -537,10 +537,6 @@
                 </Property>
                 <Property name="columnSelectionAllowed" type="boolean" value="true"/>
               </Properties>
-              <Events>
-                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jt_busquedaFocusGained"/>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jt_busquedaMouseClicked"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
