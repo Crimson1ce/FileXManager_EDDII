@@ -156,6 +156,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         introRegistros = new javax.swing.JMenuItem();
         searchRegistros = new javax.swing.JMenuItem();
         listRegistros = new javax.swing.JMenuItem();
+        cruzateFIle = new javax.swing.JMenuItem();
         Indices = new javax.swing.JMenu();
         newIndex = new javax.swing.JMenuItem();
         reindexFile = new javax.swing.JMenuItem();
@@ -301,11 +302,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         pantallaCrearCampos.getContentPane().add(rb_LlaveSecundaria, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 300, -1, -1));
 
         js_tamanioCadena.setModel(new javax.swing.SpinnerNumberModel(15, 2, 255, 1));
-        js_tamanioCadena.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                js_tamanioCadenaStateChanged(evt);
-            }
-        });
         pantallaCrearCampos.getContentPane().add(js_tamanioCadena, new org.netbeans.lib.awtextra.AbsoluteConstraints(337, 180, 70, -1));
 
         jLabel4.setText("Tamaño Cadena");
@@ -685,6 +681,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         });
         Registros.add(listRegistros);
 
+        cruzateFIle.setText("Cruzar Archivos");
+        cruzateFIle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cruzateFIleActionPerformed(evt);
+            }
+        });
+        Registros.add(cruzateFIle);
+
         MenuPrincipal.add(Registros);
 
         Indices.setText("Indices");
@@ -1048,10 +1052,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             rb_campoNormal.setSelected(true);
         }
     }//GEN-LAST:event_CrearCampoMouseClicked
-
-    private void js_tamanioCadenaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_js_tamanioCadenaStateChanged
-
-    }//GEN-LAST:event_js_tamanioCadenaStateChanged
 
     private void tipoStringStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tipoStringStateChanged
         if (tipoString.isSelected()) {
@@ -1892,6 +1892,42 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton_hacerSecundariaActionPerformed
 
+    private void cruzateFIleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cruzateFIleActionPerformed
+        JFileChooser jfc = new JFileChooser("./Files"); //donde deseamos que aparezca
+        //crear los filtros
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Registro X", "xfile");
+        //setear los filtros
+        jfc.setFileFilter(filtro);//forma 1: marcado como seleccionado
+        int seleccion = jfc.showOpenDialog(this);
+        if (seleccion != JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "La operación fue cancelada", "SALIR", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        File fichero1 = jfc.getSelectedFile();
+        seleccion = jfc.showOpenDialog(this);
+        if (seleccion != JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "La operación fue cancelada", "SALIR", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        File fichero2 = jfc.getSelectedFile();
+
+        if (fichero1.equals(fichero2)) {
+            JOptionPane.showMessageDialog(this, "La operación fue cancelada. Los archivos no pueden ser el mismo", "SALIR", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        if (!fichero1.getPath().endsWith(".xfile") || !fichero2.getPath().endsWith(".xfile")) {
+            JOptionPane.showMessageDialog(this, "La operación fue cancelada. Los archivos deber de extension .xfile", "SALIR", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        String path1 = fichero1.getPath();
+        String path2 = fichero2.getPath();
+        File indices1 = new File(path1.substring(0, path1.length() - 5) + "index");
+        File indices2 = new File(path2.substring(0, path2.length() - 5) + "index");
+        ArchivoDeRegitstro cruce1 = new ArchivoDeRegitstro(fichero1, indices1);
+        ArchivoDeRegitstro cruce2 = new ArchivoDeRegitstro(fichero2, indices2);
+    }//GEN-LAST:event_cruzateFIleActionPerformed
+
     public void listAfter() {
         DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
 
@@ -2137,6 +2173,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu Registros;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JMenuItem closeFile;
+    private javax.swing.JMenuItem cruzateFIle;
     private javax.swing.JMenuItem exportExcel;
     private javax.swing.JMenuItem exportXML;
     private javax.swing.JMenuItem introRegistros;

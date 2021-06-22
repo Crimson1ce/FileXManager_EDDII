@@ -380,9 +380,6 @@
               <SpinnerModel initial="15" maximum="255" minimum="2" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="js_tamanioCadenaStateChanged"/>
-          </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="337" y="180" width="70" height="-1"/>
@@ -939,6 +936,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listRegistrosActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="cruzateFIle">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Cruzar Archivos"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cruzateFIleActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
