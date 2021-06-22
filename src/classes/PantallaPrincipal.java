@@ -240,11 +240,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jPanel4.add(jButton_hacerPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 220, -1));
 
         jList_campos.setModel(new DefaultListModel());
-        jList_campos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList_camposMouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(jList_campos);
 
         jPanel4.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 197, 234));
@@ -533,11 +528,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jTable_Display.setGridColor(new java.awt.Color(153, 0, 204));
         jTable_Display.setRowSelectionAllowed(false);
         jTable_Display.setShowHorizontalLines(false);
-        jTable_Display.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable_DisplayMouseClicked(evt);
-            }
-        });
         jScrollPane3.setViewportView(jTable_Display);
 
         jPanel_BackGround.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 950, 350));
@@ -1058,14 +1048,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             rb_campoNormal.setSelected(true);
         }
     }//GEN-LAST:event_CrearCampoMouseClicked
-
-    private void jTable_DisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable_DisplayMouseClicked
-
-    }//GEN-LAST:event_jTable_DisplayMouseClicked
-
-    private void jList_camposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList_camposMouseClicked
-
-    }//GEN-LAST:event_jList_camposMouseClicked
 
     private void js_tamanioCadenaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_js_tamanioCadenaStateChanged
 
