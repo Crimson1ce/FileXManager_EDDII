@@ -54,7 +54,7 @@ public class CampoTexto extends Campo {
         if (!(obj instanceof CampoTexto)) return false;
         
         CampoTexto c = (CampoTexto) obj;
-        return this.texto.equals(c.texto);
+        return this.texto.strip().equals(c.texto.strip());
     }
     
     

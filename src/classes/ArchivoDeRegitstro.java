@@ -25,12 +25,16 @@ public class ArchivoDeRegitstro {
     protected ArrayList<Campo> camposDelArchivo;
     protected LinkedList<Integer> AvailList;
     protected BTree<Campo, Integer> arbolIndices;
+    protected File baseFile;
 
     public ArchivoDeRegitstro() {
     }
 
     public ArchivoDeRegitstro(File archivo, File archivoArbol) {
         try ( RandomAccessFile raf = new RandomAccessFile(archivo, "r")) {
+            
+            baseFile = archivo;
+            
             this.cabezaAvail = raf.readInt();//4
             this.noRegistros = raf.readInt();//4
             Date fecha = null;
@@ -161,6 +165,10 @@ public class ArchivoDeRegitstro {
         this.secundarias = secundarias;
     }
 
+    public File getBaseFile() {
+        return baseFile;
+    }
+
     public int tamanioMetadata() {
         int total = 43 + (4 * secundarias.size()) + (31 * camposDelArchivo.size());
 
@@ -243,6 +251,28 @@ public class ArchivoDeRegitstro {
                 Integer old = secundarias.remove(i--);
             }
         }
+    }
+    
+    public int offsetToKey() {
+        if (llavePrincipal == -1) return -1;
+        
+        int ret = 2;
+        
+        for (int i=0; i<llavePrincipal; i++) {
+            Campo c = camposDelArchivo.get(i);
+            
+            if(c instanceof CampoEntero) {
+                ret += 4;
+            } else if (c instanceof CampoDecimal) {
+                ret += 8;
+            } else if (c instanceof CampoCaracter) {
+                ret += 2;
+            } else {
+                ret += ((CampoTexto)c).getLongitud() + 2;
+            }
+        }
+        
+        return ret;
     }
 
 }
