@@ -86,16 +86,15 @@ public class ArchivoDeRegitstro {
             BTree<Campo, Integer> arbolAux = (BTree<Campo, Integer>) os.readObject();
 
             this.arbolIndices = arbolAux;
-            
+
             reconstruirAvailList(archivo);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ArchivoDeRegitstro.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ArchivoDeRegitstro.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(this.arbolIndices.toString());
-        
+
     }
 
     public ArchivoDeRegitstro(int llavePrincipal, Date fechaCreacion, int noRegistros, int cabezaAvail, ArrayList<Campo> camposDelArchivo) {
@@ -198,15 +197,13 @@ public class ArchivoDeRegitstro {
     }
 
     public File updateTree(File fileIndices) {
-        
+
 //        String path = fileIndices.getPath();
 //        fileIndices.delete();
 //        
 //        fileIndices = new File(path);
-        
-        try (FileOutputStream fs = new FileOutputStream(fileIndices, false);
-                ObjectOutputStream os = new ObjectOutputStream(fs)) {
-            
+        try ( FileOutputStream fs = new FileOutputStream(fileIndices, false);  ObjectOutputStream os = new ObjectOutputStream(fs)) {
+
             os.writeObject(this.arbolIndices);
             os.flush();
         } catch (FileNotFoundException ex) {
@@ -216,35 +213,34 @@ public class ArchivoDeRegitstro {
         }
         return fileIndices;
     }
-    
+
     private void reconstruirAvailList(File file) {
-        
-        try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+
+        try ( RandomAccessFile raf = new RandomAccessFile(file, "r")) {
             int pos = this.cabezaAvail;
             this.AvailList = new LinkedList<>();
-            
-            while(pos != -1) {
+
+            while (pos != -1) {
                 this.AvailList.insertarAlFinal(pos);
                 raf.seek(pos);
-                
+
                 raf.readChar();
                 pos = raf.readInt();
             }
-            
+
         } catch (Exception e) {
         }
-        
+
     }
-    
+
     public void updateSecondaryKeys(int removed) {
         for (int i = 0; i < secundarias.size(); i++) {
             int val = secundarias.get(i);
-            
+
             if (val > removed) {
-                secundarias.set(i, val-1);
+                secundarias.set(i, val - 1);
             } else if (val == removed) {
                 Integer old = secundarias.remove(i--);
-                System.out.println(old);
             }
         }
     }

@@ -435,32 +435,6 @@
     </Container>
     <Component class="javax.swing.ButtonGroup" name="GrupoTipoDeDato">
     </Component>
-    <Container class="javax.swing.JPopupMenu" name="menuRegistros">
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-        <Property name="useNullLayout" type="boolean" value="true"/>
-      </Layout>
-      <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="AgregarRegistro">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Agregar Nuevo Registro"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AgregarRegistroActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="SalvarCambiosTemporalmente">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Guardar temporalmente"/>
-          </Properties>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="EliminarRegistros">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Eliminar Registro Seleccionado"/>
-          </Properties>
-        </MenuItem>
-      </SubComponents>
-    </Container>
     <Component class="javax.swing.ButtonGroup" name="LlavePrincipal_Secundaria">
     </Component>
     <Container class="javax.swing.JDialog" name="jd_nuevoRegistro">
@@ -930,7 +904,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem_listarCampos">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Listar Campos"/>
+                <Property name="text" type="java.lang.String" value="Operaciones sobre Campos"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem_listarCamposActionPerformed"/>
