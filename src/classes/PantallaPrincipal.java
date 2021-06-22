@@ -1924,8 +1924,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         String path2 = fichero2.getPath();
         File indices1 = new File(path1.substring(0, path1.length() - 5) + "index");
         File indices2 = new File(path2.substring(0, path2.length() - 5) + "index");
-        ArchivoDeRegitstro cruce1 = new ArchivoDeRegitstro(fichero1, indices1);
-        ArchivoDeRegitstro cruce2 = new ArchivoDeRegitstro(fichero2, indices2);
+        cruce1 = new ArchivoDeRegitstro(fichero1, indices1);
+        cruce2 = new ArchivoDeRegitstro(fichero2, indices2);
     }//GEN-LAST:event_cruzateFIleActionPerformed
 
     public void listAfter() {
@@ -2562,4 +2562,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private String path = "";
     private int currentPosList = -1;
     private int currentRegList = -1;
+
+    private ArchivoDeRegitstro cruce1;
+    private ArchivoDeRegitstro cruce2;
 }
