@@ -39,6 +39,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.fontbox.ttf.BufferedRandomAccessFile;
+import org.bouncycastle.asn1.cms.Time;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -882,10 +883,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jLabelPrincipal.setText("Llave principal: ");
 
-        jb_inicio.setEnabled(true);
-        jb_final.setEnabled(true);
-        jb_anterior.setEnabled(true);
-        jb_siguiente.setEnabled(true);
+        jb_inicio.setEnabled(false);
+        jb_final.setEnabled(false);
+        jb_anterior.setEnabled(false);
+        jb_siguiente.setEnabled(false);
 
     }//GEN-LAST:event_closeFileActionPerformed
 
@@ -1318,6 +1319,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
 
             int lp = archivoEnUso.getLlavePrincipal();
+            
             BTree<Campo, Integer> tree = archivoEnUso.getArbolIndices();
             String nombreCampo = archivoEnUso.getCamposDelArchivo().get(lp).getNombreCampo();
 
@@ -1895,63 +1897,76 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private void cruzateFIleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cruzateFIleActionPerformed
 
-        if (archivoCargado != null) {
-            saveFileActionPerformed(evt);
-            closeFileActionPerformed(evt);
+        try {
+
+            if (archivoCargado != null) {
+                saveFileActionPerformed(evt);
+                closeFileActionPerformed(evt);
+            }
+            
+            JFileChooser jfc = new JFileChooser("./Files"); //donde deseamos que aparezca
+            //crear los filtros
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Registro X", "xfile");
+            //setear los filtros
+            jfc.setFileFilter(filtro);//forma 1: marcado como seleccionado
+            jfc.setDialogTitle("Primer archivo a cruzar");
+            int seleccion = jfc.showOpenDialog(this);
+            if (seleccion != JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(this, "La operación fue cancelada", "SALIR", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            File fichero1 = jfc.getSelectedFile();
+            
+            Thread.sleep(1000);
+            
+            jfc.setDialogTitle("Segundo archivo a cruzar");
+            seleccion = jfc.showOpenDialog(this);
+            if (seleccion != JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(this, "La operación fue cancelada", "SALIR", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            File fichero2 = jfc.getSelectedFile();
+
+            if (fichero1.equals(fichero2)) {
+                JOptionPane.showMessageDialog(this, "La operación fue cancelada. Los archivos no pueden ser el mismo", "SALIR", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            if (!fichero1.getPath().endsWith(".xfile") || !fichero2.getPath().endsWith(".xfile")) {
+                JOptionPane.showMessageDialog(this, "La operación fue cancelada. Los archivos deber de extension .xfile", "SALIR", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            String path1 = fichero1.getPath();
+            String path2 = fichero2.getPath();
+
+            File indices1 = new File(path1.substring(0, path1.length() - 5) + "index");
+            File indices2 = new File(path2.substring(0, path2.length() - 5) + "index");
+
+            cruce1 = new ArchivoDeRegitstro(fichero1, indices1);
+            cruce2 = new ArchivoDeRegitstro(fichero2, indices2);
+
+            DefaultComboBoxModel cmod1 = new DefaultComboBoxModel();
+
+            for (int i = 0; i < cruce1.getCamposDelArchivo().size(); i++) {
+                cmod1.addElement(cruce1.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25));
+            }
+
+            DefaultComboBoxModel cmod2 = new DefaultComboBoxModel();
+            for (int i = 0; i < cruce2.getCamposDelArchivo().size(); i++) {
+                cmod2.addElement(cruce2.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25));
+            }
+
+            jcb_cruce1.setModel(cmod1);
+            jcb_cruce2.setModel(cmod2);
+
+            jd_cruce.pack();
+            jd_cruce.setModal(true);
+            jd_cruce.setLocationRelativeTo(this);
+            jd_cruce.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        JFileChooser jfc = new JFileChooser("./Files"); //donde deseamos que aparezca
-        //crear los filtros
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de Registro X", "xfile");
-        //setear los filtros
-        jfc.setFileFilter(filtro);//forma 1: marcado como seleccionado
-        int seleccion = jfc.showOpenDialog(this);
-        if (seleccion != JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this, "La operación fue cancelada", "SALIR", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        File fichero1 = jfc.getSelectedFile();
-        seleccion = jfc.showOpenDialog(this);
-        if (seleccion != JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this, "La operación fue cancelada", "SALIR", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        File fichero2 = jfc.getSelectedFile();
-
-        if (fichero1.equals(fichero2)) {
-            JOptionPane.showMessageDialog(this, "La operación fue cancelada. Los archivos no pueden ser el mismo", "SALIR", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        if (!fichero1.getPath().endsWith(".xfile") || !fichero2.getPath().endsWith(".xfile")) {
-            JOptionPane.showMessageDialog(this, "La operación fue cancelada. Los archivos deber de extension .xfile", "SALIR", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-
-        String path1 = fichero1.getPath();
-        String path2 = fichero2.getPath();
-        File indices1 = new File(path1.substring(0, path1.length() - 5) + "index");
-        File indices2 = new File(path2.substring(0, path2.length() - 5) + "index");
-        cruce1 = new ArchivoDeRegitstro(fichero1, indices1);
-        cruce2 = new ArchivoDeRegitstro(fichero2, indices2);
-
-        DefaultComboBoxModel cmod1 = new DefaultComboBoxModel();
-
-        for (int i = 0; i < cruce1.getCamposDelArchivo().size(); i++) {
-            cmod1.addElement(cruce1.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25));
-        }
-
-        DefaultComboBoxModel cmod2 = new DefaultComboBoxModel();
-        for (int i = 0; i < cruce2.getCamposDelArchivo().size(); i++) {
-            cmod2.addElement(cruce2.getCamposDelArchivo().get(i).getNombreCampo().substring(0, 25));
-        }
-
-        jcb_cruce1.setModel(cmod1);
-        jcb_cruce2.setModel(cmod2);
-
-        jd_cruce.pack();
-        jd_cruce.setModal(true);
-        jd_cruce.setLocationRelativeTo(this);
-        jd_cruce.setVisible(true);
     }//GEN-LAST:event_cruzateFIleActionPerformed
 
     private void jb_cruzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_cruzarActionPerformed
@@ -1969,7 +1984,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
 
         String nomCampo1 = cruce1.getCamposDelArchivo().get(seleccion1).getNombreCampo();
-        String nomCampo2 = cruce2.getCamposDelArchivo().get(seleccion2).getNombreCampo();
 
         if (!nomCampo1.substring(nomCampo1.length() - 3, nomCampo1.length()).equals(nomCampo1.substring(nomCampo1.length() - 3, nomCampo1.length()))) {
             JOptionPane.showMessageDialog(jd_cruce, "Los campos deben ser del mismo tipo.",
@@ -2018,11 +2032,16 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             nom = secuencial.getCamposDelArchivo().get(i).getNombreCampo();
             if (nom.endsWith("str")) {
-                crearCampoCruce(nom, ((CampoTexto) secuencial.getCamposDelArchivo().get(i)).getLongitud(), i == c_s);
+                crearCampoCruce(nom, ((CampoTexto) secuencial.getCamposDelArchivo().get(i)).getLongitud());
             } else {
-                crearCampoCruce(nom, 15, i == c_s);
+                crearCampoCruce(nom, 15);
             }
         }
+
+        archivoEnUso.setLlavePrincipal(secuencial.getLlavePrincipal());
+        jLabelPrincipal.setText("Llave principal: " + archivoEnUso.getCamposDelArchivo().
+                get(archivoEnUso.getLlavePrincipal()).getNombreCampo().substring(0, 25));
+        tieneLlavePrincipal = true;
 
         for (int i = 0; i < logaritmico.getCamposDelArchivo().size(); i++) {
             if (i == c_l) {
@@ -2030,11 +2049,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
             nom = logaritmico.getCamposDelArchivo().get(i).getNombreCampo();
             if (nom.endsWith("str")) {
-                crearCampoCruce(nom, ((CampoTexto) logaritmico.getCamposDelArchivo().get(i)).getLongitud(), false);
+                crearCampoCruce(nom, ((CampoTexto) logaritmico.getCamposDelArchivo().get(i)).getLongitud());
             } else {
-                crearCampoCruce(nom, 15, false);
+                crearCampoCruce(nom, 15);
             }
         }
+
+        saveFileCruce();
 
         try ( RandomAccessFile raf_s = new RandomAccessFile(secuencial.getBaseFile(), "r")) {
 
@@ -2042,75 +2063,92 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             int largo_s = secuencial.longitudRegistro();
 
             int RRN_s = 0;
-            
 
-            int toKey = secuencial.offsetToKey();
+            int toKey = secuencial.offsetToKey(c_s);
+            int toPrincipal = secuencial.offsetToKey(secuencial.getLlavePrincipal());
 
-            String type = archivoEnUso.getCamposDelArchivo().get(0).getNombreCampo();
-            int longitudCampoPrincipal = 15;
+            String type = archivoEnUso.getCamposDelArchivo().get(c_s).getNombreCampo();
+            int longitudCampoCruzado = 15;
 
             if (type.endsWith("str")) {
-                longitudCampoPrincipal = ((CampoTexto) archivoEnUso.getCamposDelArchivo().get(c_s)).getLongitud();
+                longitudCampoCruzado = ((CampoTexto) archivoEnUso.getCamposDelArchivo().get(c_s)).getLongitud();
+            }
+            
+            String typePrincipal = secuencial.getCamposDelArchivo().get(secuencial.getLlavePrincipal()).getNombreCampo();
+            int longitudCampoPrincipal = 15;
+
+            if (typePrincipal.endsWith("str")) {
+                longitudCampoPrincipal = ((CampoTexto) secuencial.getCamposDelArchivo().
+                        get(secuencial.getLlavePrincipal())).getLongitud();
             }
 
             int cont = 0;
             for (int i = 0; i < secuencial.getNoRegistros(); i++) {
 
                 raf_s.seek(offset_s);
-                
+
                 if (raf_s.readChar() == '*') {
                     i--;
                     offset_s += largo_s;
-                    raf_s.seek(offset_s);
                     RRN_s++;
                     continue;
                 }
 
                 raf_s.seek(offset_s + toKey);
 
-                Campo principal;
+                Campo cruzado;
 
                 if (type.endsWith("int")) {
                     CampoEntero ce = new CampoEntero();
                     ce.setValor(raf_s.readInt());
-                    principal = ce;
-                    System.out.println(1);
+                    cruzado = ce;
                 } else if (type.endsWith("dec")) {
                     CampoDecimal ce = new CampoDecimal();
                     ce.setValor(raf_s.readDouble());
-                    principal = ce;
-                    System.out.println(2);
+                    cruzado = ce;
                 } else if (type.endsWith("car")) {
                     CampoCaracter ce = new CampoCaracter(raf_s.readChar());
-                    principal = ce;
-                    System.out.println(3);
-                } else if (type.endsWith("str")){
-                    CampoTexto ce = new CampoTexto();
-                    ce.setLongitud(longitudCampoPrincipal);
-                    ce.setTexto(raf_s.readUTF());
-                    principal = ce;
-                    System.out.println(4);
+                    cruzado = ce;
                 } else {
-                    System.out.println("EROEJSDLDN");
-                    principal = null;
-                    System.out.println(5);
+                    CampoTexto ce = new CampoTexto();
+                    ce.setLongitud(longitudCampoCruzado);
+                    ce.setTexto(raf_s.readUTF());
+                    cruzado = ce;
                 }
-                System.out.println(type);
 
-                BTree<Campo, Integer> tree = archivoEnUso.getArbolIndices();
-                
-                System.out.println(tree.size());
-                
+                BTree<Campo, Integer> tree = logaritmico.getArbolIndices();
+
                 Pair<BTree.Node<Campo, Integer>, Integer> pair;
 
-                pair = tree.search(principal);
+                pair = tree.search(cruzado);
 
                 // El campo no está en el archivo logaritmico
                 if (pair == null) {
                     offset_s += largo_s;
-                    raf_s.seek(offset_s);
                     RRN_s++;
                     continue;
+                }
+                
+                raf_s.seek(offset_s + toPrincipal);
+
+                Campo principal;
+
+                if (typePrincipal.endsWith("int")) {
+                    CampoEntero ce = new CampoEntero();
+                    ce.setValor(raf_s.readInt());
+                    principal = ce;
+                } else if (typePrincipal.endsWith("dec")) {
+                    CampoDecimal ce = new CampoDecimal();
+                    ce.setValor(raf_s.readDouble());
+                    principal = ce;
+                } else if (typePrincipal.endsWith("car")) {
+                    CampoCaracter ce = new CampoCaracter(raf_s.readChar());
+                    principal = ce;
+                } else {
+                    CampoTexto ce = new CampoTexto();
+                    ce.setLongitud(longitudCampoPrincipal);
+                    ce.setTexto(raf_s.readUTF());
+                    principal = ce;
                 }
 
                 archivoEnUso.getArbolIndices().insert(principal, cont);
@@ -2154,11 +2192,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 offset_s += largo_s;
             }
             archivoEnUso.updateTree(archivoIndices);
-            
-            JOptionPane.showMessageDialog(jd_cruce, "Archivos cruzados exitosamente.", 
+
+            JOptionPane.showMessageDialog(jd_cruce, "Archivos cruzados exitosamente.",
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
             jd_cruce.setVisible(false);
-            
+
             cruce1 = null;
             cruce2 = null;
 
@@ -2167,26 +2205,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
 
     }
-
-//    private void nuevoRegistroCruce(Registro r, int RRN) {
-//
-//        byte[] types = new byte[archivoEnUso.getCamposDelArchivo().size()];
-//
-//        for (int i = 0; i < types.length; i++) {
-//            String nom = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
-//            if (nom.endsWith("int")) {
-//                types[i] = 1;
-//            } else if (nom.endsWith("dec")) {
-//                types[i] = 2;
-//            } else if (nom.endsWith("car")) {
-//                types[i] = 3;
-//            } else {
-//                types[i] = 4;
-//            }
-//        }
-//
-//        escribirRegistro(r, RRN);
-//    }
 
     private Registro cargarRegistroCruce(ArchivoDeRegitstro archivo, int RRN) {
 
@@ -2250,9 +2268,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    private void crearCampoCruce(String nombreCampo, int longitud, boolean esLlavePrincipal) {
-
-        boolean repetido = false;
+    private void crearCampoCruce(String nombreCampo, int longitud) {
 
         DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
         m.addColumn(nombreCampo.subSequence(0, 25));
@@ -2271,12 +2287,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             CampoTexto campo = new CampoTexto(nombreCampo);
             campo.setLongitud(longitud);
             archivoEnUso.getCamposDelArchivo().add(campo);
-        }
-
-        if (esLlavePrincipal) {
-            jLabelPrincipal.setText("Llave principal: " + nombreCampo.substring(0, 25));
-            archivoEnUso.setLlavePrincipal(archivoEnUso.getCamposDelArchivo().size() - 1);
-            tieneLlavePrincipal = true;
         }
 
         DefaultListModel mod = (DefaultListModel) jList_campos.getModel();
@@ -2328,7 +2338,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return;
             }
             InsertMetadataInNewFile(fichero);
-            JOptionPane.showMessageDialog(this, "Archivo creado exitosamente.");
             archivoCargado = fichero;
             archivoEnUso = new ArchivoDeRegitstro(archivoCargado, archivoIndices);
             jLabel_current.setText("Current file: " + archivoCargado.getName());
@@ -2347,7 +2356,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    public void listAfter() {
+    private void listAfter() {
         DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
 
         String[][] data = new String[20][archivoEnUso.getCamposDelArchivo().size()];
@@ -2411,87 +2420,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 currentPosList += largo;
                 row++;
                 raf.readChar();
-            }
-
-        } catch (EOFException eof) {
-        } catch (Exception e) {
-            return;
-        }
-
-        String[] columns = new String[data[0].length];
-        for (int i = 0; i < columns.length; i++) {
-            columns[i] = m.getColumnName(i);
-        }
-
-        m.setDataVector(data, columns);
-        jpb_porcentaje.setValue(currentRegList);
-    }
-
-    public void listBefore() {
-        DefaultTableModel m = (DefaultTableModel) jTable_Display.getModel();
-
-        String[][] data = new String[20][archivoEnUso.getCamposDelArchivo().size()];
-
-        try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
-
-            byte[] types = new byte[data[0].length];
-
-            for (int i = 0; i < types.length; i++) {
-                String nom = archivoEnUso.getCamposDelArchivo().get(i).getNombreCampo();
-                if (nom.endsWith("int")) {
-                    types[i] = 1;
-                } else if (nom.endsWith("dec")) {
-                    types[i] = 2;
-                } else if (nom.endsWith("car")) {
-                    types[i] = 3;
-                } else {
-                    types[i] = 4;
-                }
-            }
-
-            int largo = archivoEnUso.longitudRegistro();
-
-            int row = 19;
-
-            for (; row > 0; currentRegList--) {
-
-                currentPosList -= largo;
-                raf.seek(currentPosList);
-
-                char mark = raf.readChar();
-                if (mark == '*') {
-                    currentRegList++;
-                    currentPosList -= largo;
-                    raf.seek(currentPosList);
-                    continue;
-                }
-
-                for (int j = 0; j < data[0].length; j++) {
-
-                    switch (types[j]) {
-                        case 1: {
-                            String val = String.valueOf(raf.readInt());
-                            data[row][j] = val;
-                            break;
-                        }
-                        case 2: {
-                            String val = String.valueOf(raf.readDouble());
-                            data[row][j] = val;
-                            break;
-                        }
-                        case 3: {
-                            String val = String.valueOf(raf.readChar());
-                            data[row][j] = val;
-                            break;
-                        }
-                        case 4: {
-                            String val = raf.readUTF();
-                            data[row][j] = val;
-                            break;
-                        }
-                    }
-                }
-                row--;
             }
 
         } catch (EOFException eof) {
@@ -2732,7 +2660,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             registroCargado = r;
             RRNCargado = RRN;
-            
+
             mostrarRegistro(r);
 
         } catch (FileNotFoundException e) {
@@ -2808,7 +2736,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
 
             int cabeza;
-            if(archivoEnUso.getAvailList() == null || archivoEnUso.getAvailList().vacia()) {
+            if (archivoEnUso.getAvailList() == null || archivoEnUso.getAvailList().vacia()) {
                 cabeza = -1;
             } else {
                 archivoEnUso.getAvailList().suprimir(0);

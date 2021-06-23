@@ -62,7 +62,7 @@ public class ArchivoDeRegitstro {
                     }
                 }
             } catch (Exception e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
             try {
                 this.camposDelArchivo = new ArrayList<>();
@@ -82,7 +82,7 @@ public class ArchivoDeRegitstro {
                     }
                 }
             } catch (Exception e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
             FileInputStream indices = new FileInputStream(archivoArbol);
             ObjectInputStream os = new ObjectInputStream(indices);
@@ -94,9 +94,9 @@ public class ArchivoDeRegitstro {
             reconstruirAvailList(archivo);
 
         } catch (IOException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         } catch (ClassNotFoundException ex) {
-            //Logger.getLogger(ArchivoDeRegitstro.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ArchivoDeRegitstro.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -253,12 +253,12 @@ public class ArchivoDeRegitstro {
         }
     }
     
-    public int offsetToKey() {
-        if (llavePrincipal == -1) return -1;
+    public int offsetToKey(int key) {
+        if (key < 0 || key >= camposDelArchivo.size()) return -1;
         
         int ret = 2;
         
-        for (int i=0; i<llavePrincipal; i++) {
+        for (int i=0; i<key; i++) {
             Campo c = camposDelArchivo.get(i);
             
             if(c instanceof CampoEntero) {
