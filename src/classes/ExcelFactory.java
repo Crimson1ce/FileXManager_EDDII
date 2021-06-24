@@ -8,22 +8,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -144,7 +138,6 @@ public class ExcelFactory {
             }
         } catch (EOFException e) {
         } catch (Exception e) {
-            e.printStackTrace();
         }
         
         try (FileOutputStream out = new FileOutputStream(fichero.getPath() + "." + EXTENSION)) {
@@ -152,9 +145,7 @@ public class ExcelFactory {
             workbook.write(out);
             
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ExcelFactory.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(ExcelFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }

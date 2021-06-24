@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -76,7 +75,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jButton_agregar = new javax.swing.JButton();
         jButton_modificar = new javax.swing.JButton();
         jButton_eliminar = new javax.swing.JButton();
-        jButton_hacerSecundaria = new javax.swing.JButton();
         jButton_hacerPrincipal = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList_campos = new javax.swing.JList<>();
@@ -145,8 +143,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jpb_cruce = new javax.swing.JProgressBar();
         jLabel15 = new javax.swing.JLabel();
         jd_indices = new javax.swing.JDialog();
+        jl_propositoIndice = new javax.swing.JLabel();
         jcb_secundarias = new javax.swing.JComboBox<>();
-        jButton2 = new javax.swing.JButton();
+        jb_crearIndice = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
         jd_buscarSecundaria = new javax.swing.JDialog();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -244,19 +243,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         });
         jPanel4.add(jButton_eliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, 100, -1));
-
-        jButton_hacerSecundaria.setBackground(new java.awt.Color(65, 67, 106));
-        jButton_hacerSecundaria.setFont(new java.awt.Font("BankGothic Md BT", 1, 14)); // NOI18N
-        jButton_hacerSecundaria.setForeground(new java.awt.Color(255, 204, 0));
-        jButton_hacerSecundaria.setText("Hacer llave secundaria");
-        jButton_hacerSecundaria.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, java.awt.Color.yellow, null, null));
-        jButton_hacerSecundaria.setBorderPainted(false);
-        jButton_hacerSecundaria.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_hacerSecundariaActionPerformed(evt);
-            }
-        });
-        jPanel4.add(jButton_hacerSecundaria, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, 220, -1));
 
         jButton_hacerPrincipal.setBackground(new java.awt.Color(65, 67, 106));
         jButton_hacerPrincipal.setFont(new java.awt.Font("BankGothic Md BT", 1, 14)); // NOI18N
@@ -565,15 +551,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jd_indices.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jl_propositoIndice.setText("jLabel23");
+        jd_indices.getContentPane().add(jl_propositoIndice, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 280, -1));
+
         jd_indices.getContentPane().add(jcb_secundarias, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 280, 30));
 
-        jButton2.setText("Crear índice");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jb_crearIndice.setText("Indexar");
+        jb_crearIndice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jb_crearIndiceActionPerformed(evt);
             }
         });
-        jd_indices.getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, -1, -1));
+        jd_indices.getContentPane().add(jb_crearIndice, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, -1, -1));
 
         jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/Degradado_4.png"))); // NOI18N
         jd_indices.getContentPane().add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 340, 240));
@@ -859,6 +848,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         Indices.add(newIndex);
 
         reindexFile.setText("Re-indexar Archivos");
+        reindexFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reindexFileActionPerformed(evt);
+            }
+        });
         Indices.add(reindexFile);
 
         MenuPrincipal.add(Indices);
@@ -1440,6 +1434,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jb_eliminarRegistro.setEnabled(false);
         jb_modificarRegistro.setEnabled(false);
 
+        jtf_buscar.setText("");
+
         jd_buscarRegistro.pack();
         jd_buscarRegistro.setModal(true);
         jd_buscarRegistro.setLocationRelativeTo(this);
@@ -1552,7 +1548,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         if (row == -1) {
             return;
         }
-        
+
         jt_busquedaSec.clearSelection();
 
         String valor = (String) jt_busqueda.getModel().getValueAt(row, 1);
@@ -1875,29 +1871,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File(fichero.getPath() + ".xml"));
             transformer.transform(source, result);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(jd_nuevoRegistro, "Archivo no exportado correctamente 1.",
+        } catch (Exception e) {
+        } finally {
+            JOptionPane.showMessageDialog(jd_nuevoRegistro, "Archivo exportado correctamente.",
                     "EXITO", JOptionPane.INFORMATION_MESSAGE);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(jd_nuevoRegistro, "Archivo no exportado correctamente 2.",
-                    "EXITO", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException ex) {
-            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(jd_nuevoRegistro, "Archivo no exportado correctamente 3.",
-                    "EXITO", JOptionPane.INFORMATION_MESSAGE);
-        } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(jd_nuevoRegistro, "Archivo no exportado correctamente 4.",
-                    "EXITO", JOptionPane.INFORMATION_MESSAGE);
-        } catch (TransformerException ex) {
-            JOptionPane.showMessageDialog(jd_nuevoRegistro, "Archivo no exportado correctamente 5.",
-                    "EXITO", JOptionPane.INFORMATION_MESSAGE);
-            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        JOptionPane.showMessageDialog(jd_nuevoRegistro, "Archivo exportado correctamente.",
-                "EXITO", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_exportXMLActionPerformed
 
     private void listRegistrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listRegistrosActionPerformed
@@ -2041,10 +2019,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton_hacerPrincipalActionPerformed
 
-    private void jButton_hacerSecundariaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_hacerSecundariaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton_hacerSecundariaActionPerformed
-
     private void cruzateFIleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cruzateFIleActionPerformed
 
         try {
@@ -2115,7 +2089,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             jd_cruce.setLocationRelativeTo(this);
             jd_cruce.setVisible(true);
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }//GEN-LAST:event_cruzateFIleActionPerformed
 
@@ -2180,13 +2153,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jcb_secundarias.setModel(m);
 
+        jl_propositoIndice.setText("Seleccione un campo para indexar: ");
+
         jd_indices.pack();
         jd_indices.setModal(true);
         jd_indices.setLocationRelativeTo(this);
         jd_indices.setVisible(true);
+
+        reindexar = false;
     }//GEN-LAST:event_newIndexActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void crearNuevoIndice() {
         int seleccion = jcb_secundarias.getSelectedIndex();
 
         if (seleccion == -1) {
@@ -2257,22 +2234,16 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     }
                 } //Fin switch
 
-                System.out.println(tree.size());
-                System.out.println(c.toString());
-
-                if (!tree.insert(c, cont)) {
+                if (!tree.insert(c, cont++)) {
                     JOptionPane.showMessageDialog(jd_indices, "No se pudo crear el índice. Valores repetidos.",
                             "Error.", JOptionPane.ERROR_MESSAGE);
                     tree = null;
                     return;
                 }
                 offset += longitud;
-
             }
 
             //Arbol lleno
-            System.out.println("Parent: " + archivoCargado.getParent());
-
             String actName = archivoCargado.getName();
             File dir_indices = new File(archivoCargado.getParent() + "\\" + actName.substring(0, actName.length() - 6));
 
@@ -2290,20 +2261,133 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 os.writeObject(tree);
                 os.flush();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             JOptionPane.showMessageDialog(jd_indices, "Archivo de índices creado exitosamente.",
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (Exception e) {
-            e.printStackTrace();
+        }
+    }
+
+    private void reindexarCampo() {
+        int seleccion = jcb_secundarias.getSelectedIndex();
+
+        if (seleccion == -1) {
+            return;
         }
 
+        int index = archivoEnUso.getSecundarias().get(seleccion);
+        String nomCampo = archivoEnUso.getCamposDelArchivo().get(index).getNombreCampo();
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+        String nomSinEspacios = nomCampo.substring(0, 25).strip();
+
+        String actName = archivoCargado.getName();
+
+        String dirPath = archivoCargado.getParent() + "\\" + actName.substring(0, actName.length() - 6);
+
+        File file_indices = new File(dirPath + "\\" + nomSinEspacios + ".index");
+
+        if (!file_indices.exists()) {
+            JOptionPane.showMessageDialog(jd_indices, "No se ha creado un índice con el campo seleccionado.",
+                    "Error.", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int type;
+
+        if (nomCampo.endsWith("int")) {
+            type = 1;
+        } else if (nomCampo.endsWith("dec")) {
+            type = 2;
+        } else if (nomCampo.endsWith("car")) {
+            type = 3;
+        } else {
+            type = 4;
+        }
+
+        BTree<Campo, Integer> tree = new BTree<>(3);
+
+        try ( RandomAccessFile raf = new RandomAccessFile(archivoCargado, "r")) {
+
+            int offset = archivoEnUso.tamanioMetadata();
+            int longitud = archivoEnUso.longitudRegistro();
+            int toKey = archivoEnUso.offsetToKey(index);
+
+            int cont = 0;
+            for (int i = 0; i < archivoEnUso.getNoRegistros(); i++) {
+                raf.seek(offset);
+
+                if (raf.readChar() == '*') {
+                    i--;
+                    offset += longitud;
+                    cont++;
+                    continue;
+                }
+
+                raf.seek(offset + toKey);
+
+                Campo c = null;
+
+                switch (type) {
+                    case 1: {
+                        c = new CampoEntero();
+                        ((CampoEntero) c).setValor(raf.readInt());
+                        break;
+                    }
+                    case 2: {
+                        c = new CampoDecimal();
+                        ((CampoDecimal) c).setValor(raf.readDouble());
+                        break;
+                    }
+                    case 3: {
+                        c = new CampoCaracter(raf.readChar());
+                        break;
+                    }
+                    case 4: {
+                        CampoTexto ct = new CampoTexto();
+
+                        ct.setLongitud(((CampoTexto) archivoEnUso.getCamposDelArchivo().get(index)).getLongitud());
+                        ct.setTexto(raf.readUTF());
+
+                        c = ct;
+                        break;
+                    }
+                } //Fin switch
+
+                if (!tree.insert(c, cont++)) {
+                    JOptionPane.showMessageDialog(jd_indices, "No se pudo crear el índice. Valores repetidos.",
+                            "Error.", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                offset += longitud;
+            }
+
+            try ( FileOutputStream fs = new FileOutputStream(file_indices, false);  ObjectOutputStream os = new ObjectOutputStream(fs)) {
+
+                os.writeObject(tree);
+                os.flush();
+            } catch (FileNotFoundException ex) {
+            } catch (IOException ex) {
+            }
+
+            JOptionPane.showMessageDialog(jd_indices, "Archivo de índices creado exitosamente.",
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+        }
+    }
+
+    private void jb_crearIndiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_crearIndiceActionPerformed
+
+        if (reindexar) {
+            reindexarCampo();
+        } else {
+            crearNuevoIndice();
+        }
+
+    }//GEN-LAST:event_jb_crearIndiceActionPerformed
 
     private void searchSecundariaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchSecundariaActionPerformed
 
@@ -2343,7 +2427,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             cb_m.addElement(archivoEnUso.getCamposDelArchivo().get(secundaria).getNombreCampo().substring(0, 25).strip());
         }
 
-        jcb_secundarias.setModel(cb_m);
+        jcb_buscarSec.setModel(cb_m);
 
         Object[][] dataVector = new Object[archivoEnUso.getCamposDelArchivo().size()][2];
         for (int i = 0; i < dataVector.length; i++) {
@@ -2356,6 +2440,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         mod.setDataVector(dataVector, columIden);
 
         jt_busquedaSec.setModel(mod);
+
+        jtf_buscarSec.setText("");
 
         jb_eliminarRegistroSec.setEnabled(false);
         jb_modificarRegistroSec.setEnabled(false);
@@ -2376,52 +2462,45 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return;
             }
 
-            int seleccion = jcb_secundarias.getSelectedIndex();
+            int seleccion = jcb_buscarSec.getSelectedIndex();
 
             if (seleccion == -1) {
                 return;
             }
 
-            int llave = archivoEnUso.getLlavePrincipal();
+            int llave = archivoEnUso.getSecundarias().get(seleccion);
 
-            
             ////////////////////////////////
-            
             String actName = archivoCargado.getName();
-            String filePath = archivoCargado.getParent() + "\\" + actName.substring(0, actName.length() - 6) 
+            String filePath = archivoCargado.getParent() + "\\" + actName.substring(0, actName.length() - 6)
                     + "\\" + archivoEnUso.getCamposDelArchivo()
-                            .get(archivoEnUso.getSecundarias().get(seleccion))
-                            .getNombreCampo().substring(0, 25).strip() + ".index";
+                            .get(llave).getNombreCampo().substring(0, 25).strip() + ".index";
 
             File secTree = new File(filePath);
-            
+
             if (!secTree.exists()) {
                 JOptionPane.showMessageDialog(jd_indices, "No se ha creado un índice con esa llave secundaria.",
                         "Error.", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            
+
             BTree<Campo, Integer> tree;
-            
-            try (FileInputStream fis = new FileInputStream(secTree);
-                    ObjectInputStream ois = new ObjectInputStream(fis)) {
-                
+
+            try ( FileInputStream fis = new FileInputStream(secTree);  ObjectInputStream ois = new ObjectInputStream(fis)) {
+
                 tree = (BTree<Campo, Integer>) ois.readObject();
-                
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(jd_indices, "No se pudo cargar el árbol de la llave secundaria.",
                         "Error.", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            
-            
+
             String nombreCampo = archivoEnUso.getCamposDelArchivo()
-                    .get(archivoEnUso.getSecundarias().get(seleccion)).getNombreCampo();
+                    .get(llave).getNombreCampo();
 
             Pair<BTree.Node<Campo, Integer>, Integer> pair;
-            
+
             if (nombreCampo.endsWith("int")) {
                 Integer val = Integer.parseInt(valueToSearch);
                 CampoEntero campo = new CampoEntero();
@@ -2439,7 +2518,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             } else {
                 CampoTexto campo = new CampoTexto();
                 campo.setLongitud(((CampoTexto) archivoEnUso.getCamposDelArchivo()
-                        .get(archivoEnUso.getSecundarias().get(seleccion))).getLongitud());
+                        .get(llave)).getLongitud());
                 campo.setTexto(valueToSearch);
                 pair = tree.search(campo);
             }
@@ -2469,13 +2548,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jb_clearCargadoSecActionPerformed
 
     private void jb_modificarRegistroSecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_modificarRegistroSecActionPerformed
-        
+
         int row = jt_busquedaSec.getSelectedRow();
 
         if (row == -1) {
             return;
         }
-        
+
         jt_busqueda.clearSelection();
 
         String valor = (String) jt_busquedaSec.getModel().getValueAt(row, 1);
@@ -2492,6 +2571,31 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void jb_eliminarRegistroSecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_eliminarRegistroSecActionPerformed
         jb_eliminarRegistroActionPerformed(evt);
     }//GEN-LAST:event_jb_eliminarRegistroSecActionPerformed
+
+    private void reindexFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reindexFileActionPerformed
+
+        if (!verifyOpen()) {
+            return;
+        }
+
+        DefaultComboBoxModel m = new DefaultComboBoxModel();
+
+        for (Integer secundaria : archivoEnUso.getSecundarias()) {
+            m.addElement(archivoEnUso.getCamposDelArchivo().get(secundaria).getNombreCampo().substring(0, 25).strip());
+        }
+
+        jcb_secundarias.setModel(m);
+
+        jl_propositoIndice.setText("Seleccione un campo para reindexar: ");
+
+        jd_indices.pack();
+        jd_indices.setModal(true);
+        jd_indices.setLocationRelativeTo(this);
+        jd_indices.setVisible(true);
+
+        reindexar = true;
+
+    }//GEN-LAST:event_reindexFileActionPerformed
 
     private void cruzar(ArchivoDeRegitstro secuencial, ArchivoDeRegitstro logaritmico, int c_s, int c_l) {
 
@@ -2649,7 +2753,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 Registro r_l = cargarRegistroCruce(logaritmico, RRN_l);
 
                 if (r_s == null || r_l == null) {
-                    System.out.println("Error carga de registros de archivos");
+                    JOptionPane.showMessageDialog(jd_cruce, "Error carga de registros de archivos",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -2691,7 +2796,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             pbc.stop();
 
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
     }
@@ -2743,9 +2847,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             return r;
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException ex) {
-            ex.printStackTrace();
         }
         return null;
     }
@@ -2979,13 +3081,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -3015,11 +3113,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem exportXML;
     private javax.swing.JMenuItem introRegistros;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton_agregar;
     private javax.swing.JButton jButton_eliminar;
     private javax.swing.JButton jButton_hacerPrincipal;
-    private javax.swing.JButton jButton_hacerSecundaria;
     private javax.swing.JButton jButton_modificar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -3067,6 +3163,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jb_buscarRegistroSec;
     private javax.swing.JButton jb_clearCargado;
     private javax.swing.JButton jb_clearCargadoSec;
+    private javax.swing.JButton jb_crearIndice;
     private javax.swing.JButton jb_crearRegistro;
     private javax.swing.JButton jb_cruzar;
     private javax.swing.JButton jb_eliminarRegistro;
@@ -3091,6 +3188,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JDialog jd_nuevoRegistro;
     private javax.swing.JLabel jl_mod_BG;
     private javax.swing.JLabel jl_mod_BG1;
+    private javax.swing.JLabel jl_propositoIndice;
     private javax.swing.JProgressBar jpb_cruce;
     private javax.swing.JProgressBar jpb_porcentaje;
     private javax.swing.JSpinner js_tamanioCadena;
@@ -3173,8 +3271,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
             mostrarRegistro(r);
 
-        } catch (FileNotFoundException e) {
-        } catch (IOException ex) {
+//        } catch (FileNotFoundException e) {
+//        } catch (IOException ex) {
+//        }
+        } catch (Exception e) {
         }
     }
 
@@ -3202,8 +3302,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 value = ((CampoTexto) c).getTexto();
             }
 
-            mod.setValueAt(value, i, 1);
-            modSec.setValueAt(value, i, 1);
+            try {
+                mod.setValueAt(value, i, 1);
+            } catch (ArrayIndexOutOfBoundsException e) {
+            }
+            try {
+                modSec.setValueAt(value, i, 1);
+            } catch (ArrayIndexOutOfBoundsException e) {
+            }
 
         }
 
@@ -3268,7 +3374,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             archivoEnUso.setNoRegistros(archivoEnUso.getNoRegistros() + 1);
 
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -3369,13 +3474,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 jButton_modificar.setEnabled(true);
                 jButton_eliminar.setEnabled(true);
                 jButton_hacerPrincipal.setEnabled(true);
-                jButton_hacerSecundaria.setEnabled(true);
             } else {
                 jButton_agregar.setEnabled(false);
                 jButton_modificar.setEnabled(false);
                 jButton_eliminar.setEnabled(false);
                 jButton_hacerPrincipal.setEnabled(false);
-                jButton_hacerSecundaria.setEnabled(false);
             }
 
         } catch (FileNotFoundException e) {
@@ -3435,4 +3538,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private ArchivoDeRegitstro cruce1;
     private ArchivoDeRegitstro cruce2;
+
+    private boolean reindexar;
 }

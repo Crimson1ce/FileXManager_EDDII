@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ArchivoDeRegitstro {
 
@@ -43,7 +42,6 @@ public class ArchivoDeRegitstro {
                 fecha = formato.parse(raf.readUTF());
                 this.fechaCreacion = fecha;
             } catch (ParseException ex) {
-                Logger.getLogger(ArchivoDeRegitstro.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 this.llavePrincipal = raf.readInt();//4
@@ -52,8 +50,6 @@ public class ArchivoDeRegitstro {
             }
             try {
                 this.secundarias = new ArrayList<>();
-//                String lineaSecundaria = raf.readUTF();
-//                String[] llavesSecundarias = lineaSecundaria.split("\\|");
                 int auxSecundarias = raf.readInt();//4
                 for (int i = 0; i < auxSecundarias; i++) {//Este bloque lo hice asi para no tener que almacernar como objeto binario los campos y tener un identificador de su tipo--Nuila
                     try {
@@ -62,7 +58,6 @@ public class ArchivoDeRegitstro {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
             }
             try {
                 this.camposDelArchivo = new ArrayList<>();
@@ -82,7 +77,6 @@ public class ArchivoDeRegitstro {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
             }
             FileInputStream indices = new FileInputStream(archivoArbol);
             ObjectInputStream os = new ObjectInputStream(indices);
@@ -94,9 +88,7 @@ public class ArchivoDeRegitstro {
             reconstruirAvailList(archivo);
 
         } catch (IOException e) {
-            e.printStackTrace();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ArchivoDeRegitstro.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -206,18 +198,12 @@ public class ArchivoDeRegitstro {
 
     public File updateTree(File fileIndices) {
 
-//        String path = fileIndices.getPath();
-//        fileIndices.delete();
-//        
-//        fileIndices = new File(path);
         try ( FileOutputStream fs = new FileOutputStream(fileIndices, false);  ObjectOutputStream os = new ObjectOutputStream(fs)) {
 
             os.writeObject(this.arbolIndices);
             os.flush();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
         return fileIndices;
     }
